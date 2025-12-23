@@ -1021,22 +1021,10 @@
 		proxyIframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
 		proxyIframe.setAttribute('allowfullscreen', true);
 		proxyIframe.style.display = 'none';
-		
-		// Set a blank src first to initialize contentWindow
-		proxyIframe.src = 'about:blank';
-
-		// Append the proxy iframe to the DOM first
 		playerWrapper.appendChild(proxyIframe);
 
-		// Wait for the iframe to be ready, then navigate
-		setTimeout(() => {
-			try {
-				proxyIframe.contentWindow.location.href = 'https://en.wikipedia.org/wiki/Bruce_Lee?goodTubeProxy=1';
-			} catch (e) {
-				// If contentWindow fails, try setting src directly
-				proxyIframe.src = 'https://en.wikipedia.org/wiki/Bruce_Lee?goodTubeProxy=1';
-			}
-		}, 10);
+		// We need to use this method so it doesn't mess with the browser history
+		proxyIframe.contentWindow.location.replace('https://en.wikipedia.org/wiki/Bruce_Lee?goodTubeProxy=1');
 
 		// Expose these globally
 		goodTube_playerWrapper = playerWrapper;
