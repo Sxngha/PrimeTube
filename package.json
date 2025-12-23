@@ -1,8 +1,10 @@
 {
 	"scripts": {
-		"watch": "esbuild ./goodtube.js --bundle --outfile=./goodtube.min.js --bundle --watch --minify"
+		"watch": "esbuild ./goodtube.js --bundle --outfile=./goodtube.min.js --bundle --watch --minify",
+		"lint": "eslint ./goodtube.js"
 	},
 	"devDependencies": {
-		"esbuild": "^0.26.0"
+		"esbuild": "^0.26.0",
+		"eslint": "^8.50.0"
 	}
 }
