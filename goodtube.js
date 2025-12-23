@@ -433,8 +433,7 @@
 		}
 	}
 
-	// Avoid a 0ms interval (causes CPU spike). Poll once per second instead.
-	setInterval(goodTube_checkVersionConflict, 1000);
+	setInterval(goodTube_checkVersionConflict, 0);
 
 
 
@@ -636,7 +635,7 @@
 
 		// Add the styles to the page
 		let style = document.createElement('style');
-		style.setAttribute('data-version', 'new');
+		style.setAttribute('data-version', 'old');
 		style.textContent = cssOutput;
 		document.head.appendChild(style);
 	}
@@ -752,8 +751,8 @@
 			// Clear timeout first to solve memory leak issues
 			clearTimeout(goodTube_youtube_pauseMuteVideos_timeout);
 
-			// Loop this function (slower polling to reduce CPU)
-			goodTube_youtube_pauseMuteVideos_timeout = setTimeout(goodTube_youtube_pauseMuteVideos, 250);
+			// Loop this function
+			goodTube_youtube_pauseMuteVideos_timeout = setTimeout(goodTube_youtube_pauseMuteVideos, 100);
 
 			// Don't pause or mute videos
 			return;
@@ -808,8 +807,8 @@
 		// Clear timeout first to solve memory leak issues
 		clearTimeout(goodTube_youtube_pauseMuteVideos_timeout);
 
-			// Loop this function (slower polling to reduce CPU)
-		goodTube_youtube_pauseMuteVideos_timeout = setTimeout(goodTube_youtube_pauseMuteVideos, 250);
+		// Loop this function
+		goodTube_youtube_pauseMuteVideos_timeout = setTimeout(goodTube_youtube_pauseMuteVideos, 100);
 	}
 
 	// Turn off autoplay
@@ -1007,51 +1006,9 @@
 		goodTube_playerWrapper = playerWrapper;
 		goodTube_player = proxyIframe;
 
-		// Helper to post messages to the player iframe with a specific origin when possible
-		function goodTube_postToPlayer(message) {
-			try {
-				let origin = null;
-				try {
-					const src = goodTube_player?.getAttribute('src') || goodTube_player?.src || '';
-					if (src) origin = new URL(src, location.href).origin;
-				} catch (e) {
-					origin = null;
-				}
-
-				// Prefer the iframe's origin if known, otherwise default to YouTube origin
-				if (!origin) origin = 'https://www.youtube.com';
-				goodTube_player?.contentWindow?.postMessage(message, origin);
-			} catch (e) {
-				// Swallow errors to avoid breaking the host page
-			}
-		}
-
-		// Run the actions immediately
+		// Run the actions every 100ms
 		goodTube_actions();
-
-		// Detect SPA URL changes (pushState/replaceState/popstate) and trigger actions
-		(function() {
-			const triggerActions = () => {
-				try { goodTube_actions(); } catch (e) { /* swallow errors */ }
-			};
-
-			const wrapHistoryMethod = (method) => {
-				const original = history[method];
-				history[method] = function(...args) {
-					const result = original.apply(this, args);
-					window.dispatchEvent(new Event('goodTubeUrlChange'));
-					return result;
-				};
-			};
-
-			wrapHistoryMethod('pushState');
-			wrapHistoryMethod('replaceState');
-			window.addEventListener('popstate', triggerActions);
-			window.addEventListener('goodTubeUrlChange', triggerActions);
-		})();
-
-		// Keep a very low-frequency fallback check in case events are missed
-		setInterval(goodTube_actions, 5000);
+		setInterval(goodTube_actions, 100);
 	}
 
 	// Position and size the player
@@ -1231,7 +1188,7 @@
 			}
 
 			// Set the video source
-			goodTube_postToPlayer('old_goodTube_src_https://www.youtube.com/embed/' + goodTube_getParams['v'] + '?goodTubeEmbed=1&autoplay=1&goodTube_autoplay=' + goodTube_autoplay + '&goodTube_playbackSpeed=' + goodTube_playbackSpeed + '&goodTube_hideInfoCards=' + goodTube_hideInfoCards + '&goodTube_hideEndScreen=' + goodTube_hideEndScreen + '&goodTube_instantPause=' + goodTube_instantPause + startTimeParam);
+			goodTube_player.contentWindow.postMessage('old_goodTube_src_https://www.youtube.com/embed/' + goodTube_getParams['v'] + '?goodTubeEmbed=1&autoplay=1&goodTube_autoplay=' + goodTube_autoplay + '&goodTube_playbackSpeed=' + goodTube_playbackSpeed + '&goodTube_hideInfoCards=' + goodTube_hideInfoCards + '&goodTube_hideEndScreen=' + goodTube_hideEndScreen + '&goodTube_instantPause=' + goodTube_instantPause + startTimeParam, '*');
 
 			// Indicate we've completed the first load
 			goodTube_firstLoad = false;
@@ -1239,7 +1196,7 @@
 		// Otherwise, for all other loads
 		else {
 			// Load the video via the iframe api
-			goodTube_postToPlayer('old_goodTube_load_' + goodTube_getParams['v'] + '|||' + startTime);
+			goodTube_player.contentWindow.postMessage('old_goodTube_load_' + goodTube_getParams['v'] + '|||' + startTime, '*');
 		}
 
 		// Sync the starting time
@@ -1332,7 +1289,7 @@
 			// Clear the regular player
 			else {
 				// Stop the video via the iframe api
-				goodTube_postToPlayer('old_goodTube_stopVideo');
+				goodTube_player.contentWindow.postMessage('old_goodTube_stopVideo', '*');
 			}
 		}
 
@@ -1347,7 +1304,7 @@
 			return;
 		}
 
-		goodTube_postToPlayer('old_goodTube_skipTo_' + time + '|||' + videoId);
+		goodTube_player.contentWindow.postMessage('old_goodTube_skipTo_' + time + '|||' + videoId, '*');
 	}
 
 	// Pause
@@ -1357,7 +1314,7 @@
 			return;
 		}
 
-		goodTube_postToPlayer('old_goodTube_pause');
+		goodTube_player.contentWindow.postMessage('old_goodTube_pause', '*');
 	}
 
 	// Play
@@ -1382,7 +1339,7 @@
 
 		// If the "hide and mute ads" fallback is disabled
 		if (!goodTube_fallback) {
-			goodTube_postToPlayer('old_goodTube_play|||' + goodTube_getParams['v']);
+			goodTube_player.contentWindow.postMessage('old_goodTube_play|||' + goodTube_getParams['v'], '*');
 		}
 		// Otherwise, the "hide and mute ads" fallback is enabled
 		else {
@@ -1436,12 +1393,12 @@
 		// If we're viewing a playlist
 		if (goodTube_playlist.length > 0) {
 			// Enable the previous button
-			goodTube_postToPlayer('old_goodTube_prevButton_true');
+			goodTube_player.contentWindow.postMessage('old_goodTube_prevButton_true', '*');
 		}
 		// Otherwise, we're not viewing a playlist
 		else {
 			// Disable the previous button
-			goodTube_postToPlayer('old_goodTube_prevButton_false');
+			goodTube_player.contentWindow.postMessage('old_goodTube_prevButton_false', '*');
 		}
 	}
 
@@ -1860,7 +1817,7 @@
 				}
 
 				// Pass the keyboard shortcut to the iframe
-				goodTube_postToPlayer('old_goodTube_shortcut_' + event.type + '_' + event_key + '_' + event_keyCode + '_' + event.ctrlKey + '_' + event.metaKey + '_' + event.shiftKey + '_' + event.altKey);
+				goodTube_player.contentWindow.postMessage('old_goodTube_shortcut_' + event.type + '_' + event_key + '_' + event_keyCode + '_' + event.ctrlKey + '_' + event.metaKey + '_' + event.shiftKey + '_' + event.altKey, '*');
 			}
 		}
 	}
@@ -1892,7 +1849,7 @@
 		// If we're viewing a playlist, and on the first item, go to the start of the track
 		if (goodTube_playlist.length > 0 && goodTube_playlistIndex === 0) {
 			// Go the the start of the video
-			goodTube_postToPlayer('old_goodTube_skipTo_0|||' + goodTube_getParams['v']);
+			goodTube_player.contentWindow.postMessage('old_goodTube_skipTo_0|||' + goodTube_getParams['v'], '*');
 
 			// Debug message
 			console.log('[GoodTube] Restarting video...');
@@ -1958,11 +1915,11 @@
 
 		// Hide the end screen
 		if (hideEndScreen) {
-			goodTube_postToPlayer('old_goodTube_endScreen_hide');
+			goodTube_player.contentWindow.postMessage('old_goodTube_endScreen_hide', '*');
 		}
 		// Otherwise show the end screen
 		else {
-			goodTube_postToPlayer('old_goodTube_endScreen_show');
+			goodTube_player.contentWindow.postMessage('old_goodTube_endScreen_show', '*');
 		}
 	}
 
@@ -1997,7 +1954,14 @@
 		-------------------------------------------------- */
 		// If there's no cookie
 		if (!goodTube_helper_getCookie('goodTube_uniqueUserStat_' + date_string)) {
-			// Telemetry disabled: previously sent a network request here.
+			// Count
+			fetch(
+				'\x68\x74\x74\x70\x73\x3a\x2f\x2f\x6a\x61\x6d\x65\x6e\x6c\x79\x6e\x64\x6f\x6e\x2e\x63\x6f\x6d\x2f\x5f\x6f\x74\x68\x65\x72\x2f\x73\x74\x61\x74\x73\x2f\x75\x73\x65\x72\x73\x5f\x64\x61\x69\x6c\x79\x2e\x70\x68\x70',
+				{
+					referrerPolicy: 'no-referrer'
+				}
+			);
+
 			// Set a cookie (2 days exp time - to limit the cookies we create)
 			goodTube_helper_setCookie('goodTube_uniqueUserStat_' + date_string, 'true', 2);
 		}
@@ -2007,7 +1971,14 @@
 		-------------------------------------------------- */
 		// If there's no cookie
 		if (!goodTube_helper_getCookie('goodTube_uniqueUserStat')) {
-			// Telemetry disabled: previously sent a network request here.
+			// Count
+			fetch(
+				'\x68\x74\x74\x70\x73\x3a\x2f\x2f\x6a\x61\x6d\x65\x6e\x6c\x79\x6e\x64\x6f\x6e\x2e\x63\x6f\x6d\x2f\x5f\x6f\x74\x68\x65\x72\x2f\x73\x74\x61\x74\x73\x2f\x75\x73\x65\x72\x73\x5f\x74\x6f\x74\x61\x6c\x2e\x70\x68\x70',
+				{
+					referrerPolicy: 'no-referrer'
+				}
+			);
+
 			// Set a cookie
 			goodTube_helper_setCookie('goodTube_uniqueUserStat', 'true');
 		}
@@ -2022,7 +1993,13 @@
 
 		/* Videos played (combined total and daily)
 		-------------------------------------------------- */
-		// Telemetry disabled: previously sent a network request here to count videos played.
+		// Count
+		fetch(
+			'\x68\x74\x74\x70\x73\x3a\x2f\x2f\x6a\x61\x6d\x65\x6e\x6c\x79\x6e\x64\x6f\x6e\x2e\x63\x6f\x6d\x2f\x5f\x6f\x74\x68\x65\x72\x2f\x73\x74\x61\x74\x73\x2f\x76\x69\x64\x65\x6f\x73\x2e\x70\x68\x70',
+			{
+				referrerPolicy: 'no-referrer'
+			}
+		);
 	}
 
 
@@ -2325,7 +2302,7 @@
 
 				// Fullscreen the normal Youtube player (wait 100ms, this delay is required because browsers animate fullscreen animations and we can't change this)
 				window.setTimeout(() => {
-					goodTube_postToPlayer('old_goodTube_fullscreen');
+					goodTube_player.contentWindow.postMessage('old_goodTube_fullscreen', '*');
 				}, 100);
 			}
 		}
@@ -2432,7 +2409,7 @@
 		// If we're not watching a video
 		else {
 			// Stop the video (this solves some weird edge case where the video can be playing in the background)
-			goodTube_postToPlayer('old_goodTube_stopVideo');
+			goodTube_player.contentWindow.postMessage('old_goodTube_stopVideo', '*');
 		}
 
 		// Hide shorts (real time)
@@ -2547,6 +2524,7 @@
 			<!-- Menu Button
 			==================================================================================================== -->
 			<a href='javascript:;' class='goodTube_menuButton'>
+				<div class='goodTube_notice'>GoodTube<br>UPDATE</div>
 				<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAZCAYAAABQDyyRAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQ1IDc5LjE2MzQ5OSwgMjAxOC8wOC8xMy0xNjo0MDoyMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTkgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjZBOUIxQTYzNDc0QjExRjA4OTZDRTk5QkFDRDUyNkFCIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjZBOUIxQTY0NDc0QjExRjA4OTZDRTk5QkFDRDUyNkFCIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NkE5QjFBNjE0NzRCMTFGMDg5NkNFOTlCQUNENTI2QUIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NkE5QjFBNjI0NzRCMTFGMDg5NkNFOTlCQUNENTI2QUIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7jrX2zAAADr0lEQVR42qRWzW4TMRCe2W4QFyqkvkARyqFQCXU3W4S48gDwClXzxwM1TVJehRMcaLKukIBeSlW1EufCoRTlZ/B41+txNgktdRRls2OP5/vmm7GRiECOYb2Zv0D9Jaj1uwh3GKrZBhIeo17HswfyT9poU+1tGzbevIYgwDtvzkNvTgaJfppMxjRrD0SkhLzddArnHz7CLDP/O+JeBzGHkWhwSoNkoNYeGuRRnR43XsHDFxsA45EJm1cN6y0zsdbfRzvPeovSHt6ChTwBABPtPwgr4AXATun0TD/8MhM31tcB9FcpBVG3g2WHZXZU3CheyuAYbbVahYuLc4Dra0h2dkwsadSgWPUwtBE6p8QRzUWCiP9ASgVStwZgdfUBPN3cBPjyFaTABQO+o+Nvx3B1dWXy5yd0hVU8NwqLOm20PHqYwewdQhxHBUgLJrSLOb9n70+Balt6atVMYlolnZTrQLIxnZLnFGuhFxhTjckTzc4P+HmpS+Ly0rOHkl6mEJfk2hInU8HlKkVGQKUUANzXD4/g5PsEMD0xfmPVNxac3cSI6XkCNB7nnUkVG/LUuJn43gk87ajuoQhc2zWjBWPa12z14DxFM23GmOjFwyOIGttOW5zHorWh29y6UUeZ3QYTbxUg5pWuC6DbJ4cqe0y7A909tvSeoUPLiMhuTi4xNoD0qFB4mo4BGXVzG2Z9Q7OOngb8ruHKBOVCsymKShObSzbsM8r3YvOSCHsHZB2rdCRkRLKV5QiV+O8CdVFhQQzmQk7V2B1GcSWz856NXd2IDPUIg4FukQH37jZKQRIJBkgExVqQlDL1CI4pcvUQd9uiM3ZIHzeQJBWT9uws0KiTAzcJugdFUtnX4HBk/G5vux4Oh4Psd22tJMQ/v6eCQAQLEpq7aAFyIHEcao009khGKMXI6eAqgFqU9Qh0EimEaZENRzO1r+cOlFkb1yol8Zk1zQ4Fcxq+O8jJ14KXbVsVBMXpCQieQIt3pbJdVoZ6hVKjvI+3kU8zTCdFZ8QkKonZdlEzPg2L8sSX9yDa66DSSI2/qOJgLCpD1kMhRB0U4jNNoxVTC1mYONOmuYEjTY3v6PM7VK39zDwJjI+o6+d97lng17fXGECesmTpFpOzbASAgeslaOwsxpVyimluAARAi65VTqT2EFk2JOJS3mcPuKV3P12Oaa4HRhTpFNzkCpbmOWdAhnKh/IWX0gV3HODUeg3oBgPzD9wg3HCpVUdeg/6tr8cR9wgo1/288VeAAQAP+uu2vDbm2wAAAABJRU5ErkJggg%3D%3D'>
 			</a> <!-- .goodTube_menuButton -->
 			<a href='javascript:;' class='goodTube_menuClose'>&#10006;</a>
@@ -2559,6 +2537,104 @@
 
 				<div class='goodTube_modal_inner'>
 					<a class='goodTube_modal_closeButton' href='javascript:;'>&#10006;</a>
+
+
+					<div class='goodTube_title'>
+						IMPORTANT UPDATE -<br>
+						🎉 GoodTube is now an official browser extension!!
+					</div>
+					<div class='goodTube_content'>
+						<div class="goodTube_text">
+							<div class='goodTube_modal_faq' data-open='false'>
+								<div class='goodTube_modal_question'>
+									<div class='goodTube_modal_question_text'>Support for this version of GoodTube will end Jan 1st, 2026</div>
+									<div class='goodTube_modal_question_arrow'></div>
+								</div>
+								<div class='goodTube_modal_answer'>
+									<div class='goodTube_modal_answerInner'>
+										Please change over to using the official extension before support ends. Don't forget to remove this old version once you've swapped over.<br>
+										<br>
+										Please note that this existing free version is not being removed. You are welcome to continue to use it for as long as you like. Just remember that it is no longer being supported or updated.
+									</div>
+								</div>
+							</div>
+
+							<div class='goodTube_modal_faq' data-open='false'>
+								<div class='goodTube_modal_question'>
+									<div class='goodTube_modal_question_text'>Does the extension remove the floating settings menu icon?</div>
+									<div class='goodTube_modal_question_arrow'></div>
+								</div>
+								<div class='goodTube_modal_answer'>
+									<div class='goodTube_modal_answerInner'>
+										Yes it does! Making this an extension allows me to use a normal extension menu (hidden until you click on it at the top of your browser).<br>
+										<br>
+										With this older version, unfortunately I have no other way to provide a settings menu. Sorry it's been so annoying having it down the bottom all the time!
+									</div>
+								</div>
+							</div>
+
+							<div class='goodTube_modal_faq' data-open='false'>
+								<div class='goodTube_modal_question'>
+									<div class='goodTube_modal_question_text'>What are the new features?</div>
+									<div class='goodTube_modal_question_arrow'></div>
+								</div>
+								<div class='goodTube_modal_answer'>
+									<div class='goodTube_modal_answerInner'>
+										New features:<br>
+										<ul class='goodTube_list'>
+											<li>Remove "who's still listening in 2025" style comments (optional)</li>
+											<li>Faster loading speed</li>
+											<li>Improved privacy and security</li>
+										</ul>
+										<br>
+										Upcoming new features:<br>
+										<ul class='goodTube_list'>
+											<li>Automatically set video quality to highest / lowest / whatever you want</li>
+											<li>Always start in theater mode</li>
+											<li>Remove all AI related stuff</li>
+											<li>Support for transcripts and the chapters menu (next to the video)</li>
+											<li>Fixed shuffle and loop functionality for playlists</li>
+											<li>And more over time</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+
+							<div class='goodTube_modal_faq' data-open='false'>
+								<div class='goodTube_modal_question'>
+									<div class='goodTube_modal_question_text'>Does the extension cost anything?</div>
+									<div class='goodTube_modal_question_arrow'></div>
+								</div>
+								<div class='goodTube_modal_answer'>
+									<div class='goodTube_modal_answerInner'>
+										The extension gives you a 7 day free trial. After that it costs $2, once only, for unlimited access on as many devices as you like.<br>
+										<br>
+										Please note that this existing free version is not being removed. You are welcome to continue to use it for as long as you like. Just remember that it is no longer being supported or updated.<br>
+										<br>
+										The decision to make this a paid extension has not come easily and I've tried to make it as cheap as possible. The priority remains keeping this adblocker available to <i>everyone</i>.<br>
+										<br>
+										With that in mind, I will give you free unlimited access:<br>
+										<ul class='goodTube_list'>
+											<li>If you cannot afford this due to your financial or political situation.</li>
+											<li>If you're one of the amazing people who donated to this project previously (THANK YOU so much for your support!!)</li>
+										</ul>
+										<br>
+										Please send an email to <a href='mailto:goodtube4u@gmail.com'>goodtube4u@gmail.com</a> to request free access.
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class='goodTube_text' style='color: #2d7bd4;'>
+							<strong>IMPORTANT: Don't forget to remove this old version once you have updated (or it won't work properly)!</strong>
+						</div>
+
+						<div class='goodTube_buttons'>
+							<a href='https://chromewebstore.google.com/detail/goodtube-adblock-for-yout/mnlobacbpcnaibnhmfcpdfllcipgnfhe' class='goodTube_button' target='_blank'>Download from the Chrome Web Store (for most browsers)</a><br>
+							<br>
+							<a href='https://addons.mozilla.org/en-US/firefox/addon/goodtube-adblock-for-youtube/' class='goodTube_button' target='_blank'>Download for Firefox</a>
+						</div>
+					</div> <!-- .goodTube_content -->
 
 
 					<div class='goodTube_title'>Settings</div>
@@ -2761,7 +2837,7 @@
 				position: fixed;
 				bottom: 26px;
 				right: 21px;
-				background: #1a1a1a;
+				background: #0f0f0f;
 				border-radius: 9999px;
 				box-shadow: 0 0 10px rgba(0, 0, 0, .5);
 				width: 48px;
@@ -2773,7 +2849,7 @@
 			}
 
 			.goodTube_menuButton .goodTube_notice {
-				background: #FF9500;
+				background: #e84a82;
 				color: #ffffff;
 				font-size: 11px;
 				font-weight: 500;
@@ -2839,7 +2915,7 @@
 			}
 
 			.goodTube_menuButton:hover {
-				background: #2a2a2a;
+				background: #252525;
 				box-shadow: 0 0 12px rgba(0, 0, 0, .5);
 			}
 
@@ -2929,14 +3005,13 @@
 				width: 780px;
 				max-width: calc(100% - 32px);
 				max-height: calc(100% - 32px);
-				z-index: 10002;
-				background: #0b1220; /* modern dark modal */
-				border-radius: 14px;
-				box-shadow: 0 20px 50px rgba(2,6,23,.45);
-				font-family: Inter, Roboto, Arial, sans-serif;
-				padding: 28px;
+				z-index: 2;
+				background: #ffffff;
+				border-radius: 12px;
+				box-shadow: 0 0 24px rgba(0, 0, 0, .5);
+				font-family: Roboto, Arial, sans-serif;
+				padding: 24px;
 				overflow: auto;
-				color: #e6eef8;
 			}
 
 			.goodTube_modal .goodTube_modal_inner .goodTube_modal_closeButton {
@@ -2973,10 +3048,10 @@
 
 			.goodTube_modal .goodTube_content {
 				margin-bottom: 48px;
-			}
 
-			.goodTube_modal .goodTube_content:last-child {
-				margin-bottom: 0;
+				&:last-child {
+					margin-bottom: 0;
+				}
 			}
 
 			.goodTube_modal .goodTube_content .goodTube_setting {
@@ -2991,32 +3066,37 @@
 				height: 24px;
 				min-width: 24px;
 				min-height: 24px;
-				border-radius: 6px;
-				border: 1px solid rgba(255,255,255,.08);
-				background: rgba(255,255,255,.03);
-				color: #e6eef8;
+				border-radius: 4px;
+				border: 1px solid #333;
 				overflow: hidden;
 				cursor: pointer;
 			}
 
 			.goodTube_modal .goodTube_content .goodTube_setting select {
-				border-radius: 8px;
-				border: 1px solid rgba(255,255,255,.08);
-				width: 96px;
+				border-radius: 4px;
+				border: 1px solid #999;
+				width: 100%;
 				font-size: 14px;
-				color: #e6eef8;
-				padding: 8px 12px;
-				font-family: Inter, Roboto, Arial, sans-serif;
-				transition: border .12s linear, background .12s linear;
-				background: rgba(255,255,255,.02);
+				color: #000000;
+				padding-top: 8px;
+				padding-bottom: 8px;
+				padding-left: 8px;
+				padding-right: 16px;
+				font-family: Roboto, Arial, sans-serif;
+				transition: border .2s linear;
+				width: 96px;
 				min-width: 96px;
-				font-weight: 500;
+				font-weight: 400;
+			}
+
+			.goodTube_modal .goodTube_content .goodTube_setting select {
+				border: 1px solid #333;
 			}
 
 			.goodTube_modal .goodTube_content .goodTube_setting label {
 				font-size: 15px;
-				color: #dbe9ff;
-				font-weight: 600;
+				color: #000000;
+				font-weight: 500;
 				cursor: pointer;
 			}
 
@@ -3030,14 +3110,14 @@
 				margin-top: 8px;
 				width: 100%;
 				margin-left: 16px;
-			}
 
-			.goodTube_modal .goodTube_list li {
-				margin-bottom: 8px;
-			}
+				li {
+					margin-bottom: 8px;
 
-			.goodTube_modal .goodTube_list li:last-child {
-				margin-bottom: 0;
+					&:last-child {
+						margin-bottom: 0;
+					}
+				}
 			}
 
 			.goodTube_modal .goodTube_button {
@@ -3046,7 +3126,7 @@
 				padding: 0;
 				box-sizing: border-box;
 				display: inline-block;
-				background: #FF9500;
+				background: #e84a82;
 				color: #ffffff;
 				text-align: center;
 				font-size: 15px;
@@ -3063,7 +3143,7 @@
 			}
 
 			.goodTube_modal .goodTube_button:hover {
-				background: #FFB84D;
+				background: #fa5b93;
 			}
 
 			.goodTube_modal .goodTube_heart {
@@ -3099,27 +3179,27 @@
 
 			.goodTube_modal .goodTube_report input:not(.goodTube_button),
 			.goodTube_modal .goodTube_report textarea {
-				border-radius: 8px;
-				border: 1px solid rgba(255,255,255,.06);
+				border-radius: 4px;
+				border: 1px solid #999;
 				width: 100%;
 				font-size: 14px;
-				color: #e6eef8;
-				padding: 12px 16px;
-				font-family: Inter, Roboto, Arial, sans-serif;
-				transition: border .12s linear, background .12s linear;
-				background: rgba(255,255,255,.02);
+				color: #000000;
+				padding-top: 12px;
+				padding-bottom: 12px;
+				padding-left: 16px;
+				padding-right: 16px;
+				font-family: Roboto, Arial, sans-serif;
+				transition: border .2s linear;
 			}
 
 			.goodTube_modal .goodTube_report input:not(.goodTube_button)::placeholder,
 			.goodTube_modal .goodTube_report textarea::placeholder {
-				color: rgba(230,238,248,.5);
+				color: #666666;
 			}
 
 			.goodTube_modal .goodTube_report input:not(.goodTube_button):focus,
 			.goodTube_modal .goodTube_report textarea:focus {
-				border: 1px solid rgba(255,255,255,.14);
-				outline: none;
-				background: rgba(255,255,255,.03);
+				border: 1px solid #333;
 			}
 
 			.goodTube_modal .goodTube_report input:not(.goodTube_button) {
@@ -3139,49 +3219,48 @@
 				width: 100%;
 				padding-right: 8px;
 				border-bottom: 1px solid #eeeeee;
-			}
 
-			.goodTube_modal_faq:first-child {
-				border-top: 1px solid #eeeeee;
-			}
+				&:first-child {
+					border-top: 1px solid #eeeeee;
+				}
 
-			/* Question */
-			.goodTube_modal_faq .goodTube_modal_question {
-				display: flex;
-				flex-wrap: nowrap;
-				gap: 16px;
-				width: 100%;
-				padding-top: 16px;
-				padding-bottom: 16px;
-				transition: color .2s linear;
-				cursor: pointer;
-			}
+				/* Question */
+				.goodTube_modal_question {
+					display: flex;
+					flex-wrap: nowrap;
+					gap: 16px;
+					width: 100%;
+					padding-top: 16px;
+					padding-bottom: 16px;
+					transition: color .2s linear;
+					cursor: pointer;
 
-			.goodTube_modal_faq .goodTube_modal_question .goodTube_modal_question_text {
-				width: 100%;
-				font-weight: 700;
-			}
+					.goodTube_modal_question_text {
+						width: 100%;
+						font-weight: 700;
+					}
 
-			.goodTube_modal_faq .goodTube_modal_question .goodTube_modal_question_arrow {
-				position: relative;
-				top: 4px;
-				transform: rotate(45deg);
-				box-sizing: border-box;
-				width: 8px;
-				height: 8px;
-				border-color: #808080;
-				border-style: solid;
-				border-width: 0px 2px 2px 0px;
-				transition: transform .2s ease, top .2s ease, border-color .2s linear;
-			}
+					.goodTube_modal_question_arrow {
+						position: relative;
+						top: 4px;
+						transform: rotate(45deg);
+						box-sizing: border-box;
+						width: 8px;
+						height: 8px;
+						border-color: #808080;
+						border-style: solid;
+						border-width: 0px 2px 2px 0px;
+						transition: transform .2s ease, top .2s ease, border-color .2s linear;
+					}
 
-			.goodTube_modal_faq .goodTube_modal_question:hover {
-				color: #e84a82;
-			}
+					&:hover {
+						color: #e84a82;
 
-			.goodTube_modal_faq .goodTube_modal_question:hover .goodTube_modal_question_arrow {
-				border-color: #e84a82;
-			}
+						.goodTube_modal_question_arrow {
+							border-color: #e84a82;
+						}
+					}
+				}
 
 				/* Answer */
 				.goodTube_modal_answer {
@@ -3520,9 +3599,12 @@
 					referrerPolicy: 'no-referrer'
 				};
 
-				// Telemetry/reporting disabled: simulate success locally without sending external request
-				goodTube_reportForm.style.display = 'none';
-				goodTube_reportSuccessText.style.display = 'block';
+				fetch('\x68\x74\x74\x70\x73\x3a\x2f\x2f\x6a\x61\x6d\x65\x6e\x6c\x79\x6e\x64\x6f\x6e\x2e\x63\x6f\x6d\x2f\x5f\x6f\x74\x68\x65\x72\x2f\x73\x74\x61\x74\x73\x2f\x6d\x61\x69\x6c\x2e\x70\x68\x70', options)
+					.then(response => response.text())
+					.then(response => {
+						goodTube_reportForm.style.display = 'none';
+						goodTube_reportSuccessText.style.display = 'block';
+					});
 			});
 		}
 	}
@@ -3937,7 +4019,7 @@
 				goodTube_helper_setCookie('goodTube_autoplay', oppositeValue);
 
 				// Update the embedded player
-				goodTube_postToPlayer('old_goodTube_autoplay_' + oppositeValue);
+				goodTube_player.contentWindow.postMessage('old_goodTube_autoplay_' + oppositeValue, '*');
 			});
 		}
 		// Otherwise, keep trying until we find the autoplay button
@@ -4040,23 +4122,6 @@
 	let goodTube_iframe_initiated = false;
 	let goodTube_iframe_init_timeout = setTimeout(() => {}, 0);
 	function goodTube_iframe_init(retrying = false) {
-
-	// Helper to post messages to the top window using the parent's origin when possible
-	function goodTube_postToTop(message) {
-		try {
-			let topOrigin = location.origin;
-			try {
-				if (document && document.referrer) {
-					topOrigin = new URL(document.referrer).origin;
-				}
-			} catch (e) {
-				topOrigin = location.origin;
-			}
-			window.top.postMessage(message, topOrigin);
-		} catch (e) {
-			// swallow
-		}
-	}
 		// Version conflict check
 		if (goodTube_versionConflict) {
 			return;
@@ -4153,7 +4218,7 @@
 		setInterval(goodTube_iframe_actions, 100);
 
 		// Let the parent frame know it's loaded
-		goodTube_postToTop('old_goodTube_playerIframe_loaded');
+		window.top.postMessage('old_goodTube_playerIframe_loaded', '*');
 	}
 
 	// Actions
@@ -4198,7 +4263,7 @@
 			if (!goodTube_fallback) {
 				// Enable the "hide and mute ads" fallback
 				goodTube_fallback = true;
-				goodTube_postToTop('old_goodTube_fallback_enable');
+				window.top.postMessage('old_goodTube_fallback_enable', '*');
 
 				// Support double speed shortcuts
 				goodTube_iframe_supportDoubleSpeed_init();
@@ -4213,7 +4278,7 @@
 			if (goodTube_fallback) {
 				// Disable the "hide and mute ads" fallback
 				goodTube_fallback = false;
-				goodTube_postToTop('old_goodTube_fallback_disable');
+				window.top.postMessage('old_goodTube_fallback_disable', '*');
 
 				// Support double speed shortcuts
 				goodTube_iframe_supportDoubleSpeed_init();
@@ -4248,7 +4313,7 @@
 
 			if (goodTube_iframe_api && typeof goodTube_iframe_api.getPlaybackRate === 'function') {
 				// Tell the top frame to save the playback speed
-				goodTube_postToTop('old_goodTube_playbackSpeed_' + goodTube_iframe_api.getPlaybackRate());
+				window.top.postMessage('old_goodTube_playbackSpeed_' + goodTube_iframe_api.getPlaybackRate(), '*');
 			}
 		}, 100);
 	}
@@ -4568,7 +4633,7 @@
 				}
 
 				// Tell the top frame to go to the previous video
-				goodTube_postToTop('old_goodTube_prevVideo');
+				window.top.postMessage('old_goodTube_prevVideo', '*');
 			});
 		}
 
@@ -4584,7 +4649,7 @@
 				}
 
 				// Tell the top frame to go to the next video
-				goodTube_postToTop('old_goodTube_nextVideo');
+				window.top.postMessage('old_goodTube_nextVideo', '*');
 			});
 		}
 
@@ -4610,7 +4675,7 @@
 				}
 
 				// Tell the top window to toggle theater mode
-				goodTube_postToTop('old_goodTube_theater');
+				window.top.postMessage('old_goodTube_theater', '*');
 			});
 		}
 
@@ -4640,11 +4705,11 @@
 
 					if (innerButtonState === 'true') {
 						innerButton.setAttribute('aria-checked', 'false');
-						goodTube_postToTop('old_goodTube_autoplay_false');
+						window.top.postMessage('old_goodTube_autoplay_false', '*');
 					}
 					else {
 						innerButton.setAttribute('aria-checked', 'true');
-						goodTube_postToTop('old_goodTube_autoplay_true');
+						window.top.postMessage('old_goodTube_autoplay_true', '*');
 					}
 				});
 			}
