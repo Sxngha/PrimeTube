@@ -6,7 +6,6 @@
 
 	/* Setup the CSP (content security policy)
 	------------------------------------------------------------------------------------------ */
-*** End Patch
 
 	/* DOMPurify is extracted to dompurify.min.js. We dynamically load it when possible.
 	   This keeps the main file smaller and easier to maintain. The loader will attempt
