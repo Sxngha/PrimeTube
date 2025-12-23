@@ -34,10 +34,31 @@
     function loadGoodTube() {
         const script = document.createElement('script');
         script.src = 'https://raw.githubusercontent.com/Sxngha/PrimeTube/main/goodtube.js';
-        script.async = true;
+        script.async = false;
+        script.type = 'text/javascript';
         
         script.onerror = function() {
-            console.error('GoodTube: Failed to load external script');
+            console.error('GoodTube: Failed to load external script from GitHub');
+            // Try loading from jsDelivr CDN as backup
+            loadGoodTubeBackup();
+        };
+        
+        script.onload = function() {
+            console.log('GoodTube: Script loaded successfully');
+        };
+        
+        (document.head || document.documentElement).appendChild(script);
+    }
+
+    // Backup CDN loader
+    function loadGoodTubeBackup() {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/gh/Sxngha/PrimeTube@main/goodtube.js';
+        script.async = false;
+        script.type = 'text/javascript';
+        
+        script.onerror = function() {
+            console.error('GoodTube: Failed to load from backup CDN');
         };
         
         (document.head || document.documentElement).appendChild(script);
