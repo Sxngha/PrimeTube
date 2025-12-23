@@ -949,7 +949,7 @@
 			/* Player wrapper */
 			#goodTube_playerWrapper {
 				border-radius: 12px;
-				background: ` + backgroundColor + `;
+				background: ` + backgroundColor + ` !important;
 				position: absolute;
 				top: 0;
 				left: 0;
@@ -963,9 +963,9 @@
 				background: #000000;
 			}
 
-			/* No black background on dark theme */
+			/* Ensure black background even on dark-theme attributes */
 			html[darker-dark-theme][dark] #goodTube_playerWrapper {
-				background: transparent;
+				background: #000000 !important;
 			}
 
 			/* Fix size of Youtube player (this has to do with us setting the aspect ratio inside "goodTube_youtube_setAspectRatio") */
@@ -2637,7 +2637,7 @@
 				position: fixed;
 				bottom: 26px;
 				right: 21px;
-				background: #0f0f0f;
+				background: #000000;
 				border-radius: 9999px;
 				box-shadow: 0 0 10px rgba(0, 0, 0, .5);
 				width: 48px;
@@ -2649,7 +2649,7 @@
 			}
 
 			.goodTube_menuButton .goodTube_notice {
-				background: #e84a82;
+				background: #ff8a00;
 				color: #ffffff;
 				font-size: 11px;
 				font-weight: 500;
@@ -2715,8 +2715,8 @@
 			}
 
 			.goodTube_menuButton:hover {
-				background: #252525;
-				box-shadow: 0 0 12px rgba(0, 0, 0, .5);
+				background: #000000;
+				box-shadow: 0 0 12px rgba(0, 0, 0, .6);
 			}
 
 			.goodTube_menuButton:hover::before,
@@ -2926,7 +2926,7 @@
 				padding: 0;
 				box-sizing: border-box;
 				display: inline-block;
-				background: #e84a82;
+				background: #ff8a00;
 				color: #ffffff;
 				text-align: center;
 				font-size: 15px;
@@ -2943,11 +2943,11 @@
 			}
 
 			.goodTube_modal .goodTube_button:hover {
-				background: #fa5b93;
+				background: #e67600;
 			}
 
 			.goodTube_modal .goodTube_heart {
-				color: #e01b6a;
+				color: #ff8a00;
 				font-size: 24px;
 			}
 
@@ -2963,7 +2963,7 @@
 			}
 
 			.goodTube_modal .goodTube_text a {
-				color: #e84a82;
+				color: #ff8a00;
 				text-decoration: underline;
 			}
 
@@ -3054,10 +3054,10 @@
 					}
 
 					&:hover {
-						color: #e84a82;
+						color: #ff8a00;
 
 						.goodTube_modal_question_arrow {
-							border-color: #e84a82;
+							border-color: #ff8a00;
 						}
 					}
 				}
