@@ -44,14 +44,13 @@
 			if (window.location.href.indexOf('/watch/') !== -1) {
 				splitString = '/watch/';
 			}
-			else {
+
+			if (window.location.href.indexOf('/live/') !== -1) {
 				splitString = '/live/';
 			}
 
-			const bits = window.location.href.split(splitString);
-			if (bits.length === 2) {
-				const endBits = bits[1].split('?');
-				getParams['v'] = endBits[endBits.length - 1];
+			if (splitString !== '') {
+				getParams['v'] = window.location.href.split(splitString)[1];
 			}
 		}
 
@@ -59,10 +58,7 @@
 	}
 
 	// Set a cookie
-	function goodTube_helper_setCookie(name, value, days = 399) {
-		// Force new cookie names, we had the path attribute wrong...sorry all this will reset your settings (22/10/2025)
-		name = name + '_new';
-
+	function goodTube_helper_setCookie(name, value, days = 365) {
 		document.cookie = name + "=" + encodeURIComponent(value) + ";SameSite=Lax;path=/;max-age=" + (days * 24 * 60 * 60);
 	}
 
@@ -494,12 +490,12 @@
 			ytd-in-feed-ad-layout-renderer,
 			ytd-ad-slot-renderer,
 			ytd-statement-banner-renderer,
-			ytd-banner-promo-renderer-background
+			ytd-banner-promo-renderer-background,
 			ytd-ad-slot-renderer,
 			ytd-in-feed-ad-layout-renderer,
 			ytd-engagement-panel-section-list-renderer:not(.ytd-popup-container):not([target-id='engagement-panel-clip-create']):not(.ytd-shorts),
 			ytd-compact-video-renderer:has(.goodTube_hidden),
-			ytd-rich-item-renderer:has(> #content > ytd-ad-slot-renderer)
+			ytd-rich-item-renderer:has(> #content > ytd-ad-slot-renderer),
 			.ytd-video-masthead-ad-v3-renderer,
 			div#root.style-scope.ytd-display-ad-renderer.yt-simple-endpoint,
 			div#sparkles-container.style-scope.ytd-promoted-sparkles-web-renderer,
@@ -522,11 +518,11 @@
 			ytm-in-feed-ad-layout-renderer,
 			ytm-ad-slot-renderer,
 			ytm-statement-banner-renderer,
-			ytm-banner-promo-renderer-background
+			ytm-banner-promo-renderer-background,
 			ytm-ad-slot-renderer,
 			ytm-in-feed-ad-layout-renderer,
 			ytm-compact-video-renderer:has(.goodTube_hidden),
-			ytm-rich-item-renderer:has(> #content > ytm-ad-slot-renderer)
+			ytm-rich-item-renderer:has(> #content > ytm-ad-slot-renderer),
 			.ytm-video-masthead-ad-v3-renderer,
 			div#root.style-scope.ytm-display-ad-renderer.yt-simple-endpoint,
 			div#sparkles-container.style-scope.ytm-promoted-sparkles-web-renderer,
@@ -542,9 +538,7 @@
 			ytm-promoted-sparkles-web-renderer,
 			tp-yt-iron-overlay-backdrop,
 			#masthead-ad,
-
-			#offer-module
-			 {
+			#offer-module {
 				display: none !important;
 			}
 
@@ -1026,20 +1020,19 @@
 		proxyIframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
 		proxyIframe.setAttribute('allowfullscreen', true);
 		proxyIframe.style.display = 'none';
-		// Inject a small srcdoc into the proxy iframe instead of navigating its contentWindow
-		// This avoids cross-origin navigation and keeps history untouched
-		proxyIframe.srcdoc = `
-			<!DOCTYPE html>
-			<html>
-			<head><meta charset="utf-8"><script>
-				// Proxy init: set a fake search param so code that checks location.search sees it
-				try { location.search = '?goodTubeProxy=1'; } catch (e) { /* ignore */ }
-			</script></head>
-			<body></body>
-			</html>
-		`;
 
+		// Append the proxy iframe to the DOM first
 		playerWrapper.appendChild(proxyIframe);
+
+		// Use setTimeout to navigate to a blank Wikipedia page
+		// This triggers Tampermonkey to inject the script into the iframe
+		setTimeout(() => {
+			try {
+				proxyIframe.src = 'https://en.wikipedia.org/wiki/Special:BlankPage?goodTubeProxy=1';
+			} catch (e) {
+				// Swallow navigation errors
+			}
+		}, 0);
 
 		// Expose these globally
 		goodTube_playerWrapper = playerWrapper;
@@ -2678,113 +2671,14 @@
 					</div> <!-- .goodTube_content -->
 
 
-					<div class='goodTube_title'>FAQs</div>
-					<div class='goodTube_content'>
+				<div class='goodTube_title'>Report an issue</div>
+				<div class='goodTube_content'>
+					<div class='goodTube_text goodTube_successText'>Your message has been sent successfully.</div>
+					<form class='goodTube_report' onSubmit='javascript:;'>
 						<div class='goodTube_text'>
-							<div class='goodTube_modal_faq' data-open='false'>
-								<div class='goodTube_modal_question'>
-									<div class='goodTube_modal_question_text'>How can I share this with friends?</div>
-									<div class='goodTube_modal_question_arrow'></div>
-								</div>
-								<div class='goodTube_modal_answer'>
-									<div class='goodTube_modal_answerInner'>
-										You can send them <a href='https://github.com/goodtube4u/goodtube' target='_blank'>this link</a>. It has all of the install instructions.
-									</div>
-								</div>
-							</div>
-
-							<div class='goodTube_modal_faq' data-open='false'>
-								<div class='goodTube_modal_question'>
-									<div class='goodTube_modal_question_text'>I'm seeing a black square with no video</div>
-									<div class='goodTube_modal_question_arrow'></div>
-								</div>
-								<div class='goodTube_modal_answer'>
-									<div class='goodTube_modal_answerInner'>
-										Try uninstalling both Tampermonkey and GoodTube and then reinstalling them. Most of the time this will resolve the issue. If that doesn't work, you may have a conflicting extension. Try turning off your other extensions for a second, see if that works. Then turn them back on one at a time until you work out which one is causing the problem.
-									</div>
-								</div>
-							</div>
-
-							<div class='goodTube_modal_faq' data-open='false'>
-								<div class='goodTube_modal_question'>
-									<div class='goodTube_modal_question_text'>Playlists skip to the next video every few seconds</div>
-									<div class='goodTube_modal_question_arrow'></div>
-								</div>
-								<div class='goodTube_modal_answer'>
-									<div class='goodTube_modal_answerInner'>
-										This is usually caused by another adblocker which Youtube is detecting. To fix this problem, first disable all of your other adblockers (for Youtube only, you can leave them on for other websites). Then clear your cookies and cache (this is important). Once that's done, refresh Youtube and the problem should be fixed.
-									</div>
-								</div>
-							</div>
-
-							<div class='goodTube_modal_faq' data-open='false'>
-								<div class='goodTube_modal_question'>
-									<div class='goodTube_modal_question_text'>I can't use the miniplayer</div>
-									<div class='goodTube_modal_question_arrow'></div>
-								</div>
-								<div class='goodTube_modal_answer'>
-									<div class='goodTube_modal_answerInner'>
-										The Youtube miniplayer is not supported. Instead this uses "Picture in Picture" mode, which is the new standard for the web.
-									</div>
-								</div>
-							</div>
-
-							<div class='goodTube_modal_faq' data-open='false'>
-								<div class='goodTube_modal_question'>
-									<div class='goodTube_modal_question_text'>Transcripts are not working</div>
-									<div class='goodTube_modal_question_arrow'></div>
-								</div>
-								<div class='goodTube_modal_answer'>
-									<div class='goodTube_modal_answerInner'>
-										Unfortunately transcripts are currently not supported. I'm working on this, hang tight. Hopefully these will be added soon!
-									</div>
-								</div>
-							</div>
-
-							<div class='goodTube_modal_faq' data-open='false'>
-								<div class='goodTube_modal_question'>
-									<div class='goodTube_modal_question_text'>Is this compatible with other Youtube extensions?</div>
-									<div class='goodTube_modal_question_arrow'></div>
-								</div>
-								<div class='goodTube_modal_answer'>
-									<div class='goodTube_modal_answerInner'>
-										Probably not if they change the main video player, but otherwise they should work fine.<br>
-										<br>
-										This heavily modifies how Youtube works in order to block ads. A key part of this is replacing the default Youtube player with their "embedded" player. This means that unless your extension also works for embedded Youtube videos (like where you view a Youtube video on another website), it generally won't be compatible.<br>
-										<br>
-										Unfortunately there's not much I can do to support these extensions as a result.
-									</div>
-								</div>
-							</div>
-
-							<div class='goodTube_modal_faq' data-open='false'>
-								<div class='goodTube_modal_question'>
-									<div class='goodTube_modal_question_text'>I'm having a different problem</div>
-									<div class='goodTube_modal_question_arrow'></div>
-								</div>
-								<div class='goodTube_modal_answer'>
-									<div class='goodTube_modal_answerInner'>
-										If you're having a different issue, most of the time you will find it's caused by a conflicting extension you have installed.<br>
-										<br>
-										To test this, first turn off all other extensions you have installed. Leave only GoodTube enabled.<br>
-										<br>
-										Then refresh Youtube and check if the problem is fixed. If it is, then you know one of them is causing the issue. Turn your other extensions back on one at a time until you find the problem.
-									</div>
-								</div>
-							</div>
+							I am dedicated to helping every single person get this working. Everyone is important and if you have any problems at all, please let me know. I will respond and do my best to help!<br>
+							<br>
 						</div>
-					</div> <!-- .goodTube_content -->
-
-
-					<div class='goodTube_title'>Report an issue</div>
-					<div class='goodTube_content'>
-						<div class='goodTube_text goodTube_successText'>Your message has been sent successfully.</div>
-						<form class='goodTube_report' onSubmit='javascript:;'>
-							<div class='goodTube_text'>
-								I am dedicated to helping every single person get this working. Everyone is important and if you have any problems at all, please let me know. I will respond and do my best to help!<br>
-								<br>
-								<i>* Please read the FAQs above before reporting an issue.</i>
-							</div>
 							<input class='goodTube_reportEmail' type='email' placeholder='Email address' required>
 							<textarea class='goodTube_reportText' placeholder='Enter your message here...\r\rPlease note - most reported issues are caused by a conflicting extension. Please first try turning off all of your other extensions. Refresh Youtube, check if the problem is fixed. If it is, then you know something is conflicting. Turn your other extensions back on one at a time until you find the cause. Please try this first before reporting an issue!' required></textarea>
 							<input type='submit' class='goodTube_button' id='goodTube_button_submitReport' value='Submit'>
@@ -3179,90 +3073,6 @@
 
 
 
-			.goodTube_modal_faq {
-				display: flex;
-				flex-wrap: wrap;
-				width: 100%;
-				padding-right: 8px;
-				border-bottom: 1px solid #eeeeee;
-			}
-
-			.goodTube_modal_faq:first-child {
-				border-top: 1px solid #eeeeee;
-			}
-
-			/* Question */
-			.goodTube_modal_faq .goodTube_modal_question {
-				display: flex;
-				flex-wrap: nowrap;
-				gap: 16px;
-				width: 100%;
-				padding-top: 16px;
-				padding-bottom: 16px;
-				transition: color .2s linear;
-				cursor: pointer;
-			}
-
-			.goodTube_modal_faq .goodTube_modal_question .goodTube_modal_question_text {
-				width: 100%;
-				font-weight: 700;
-			}
-
-			.goodTube_modal_faq .goodTube_modal_question .goodTube_modal_question_arrow {
-				position: relative;
-				top: 4px;
-				transform: rotate(45deg);
-				box-sizing: border-box;
-				width: 8px;
-				height: 8px;
-				border-color: #808080;
-				border-style: solid;
-				border-width: 0px 2px 2px 0px;
-				transition: transform .2s ease, top .2s ease, border-color .2s linear;
-			}
-
-			.goodTube_modal_faq .goodTube_modal_question:hover {
-				color: #e84a82;
-			}
-
-			.goodTube_modal_faq .goodTube_modal_question:hover .goodTube_modal_question_arrow {
-				border-color: #e84a82;
-			}
-
-				/* Answer */
-				.goodTube_modal_answer {
-					display: grid;
-					grid-template-rows: 0fr;
-					margin-top: -4px;
-					transition: grid-template-rows .4s ease;
-
-					.goodTube_modal_answerInner {
-						overflow: hidden;
-						padding-bottom: 0;
-						opacity: 0;
-						transition: opacity .4s ease, padding-bottom .4s ease;
-					}
-				}
-
-				/* Open State */
-				&[data-open="true"] {
-					.goodTube_modal_question {
-						.goodTube_modal_question_arrow {
-							top: 7px;
-							transform: rotate(225deg);
-						}
-					}
-
-					.goodTube_modal_answer {
-						grid-template-rows: 1fr;
-
-						.goodTube_modal_answerInner {
-							padding-bottom: 20px;
-							opacity: 1;
-						}
-					}
-				}
-			}
 
 
 		`;
@@ -3507,35 +3317,6 @@
 
 
 
-		/* FAQs
-		-------------------------------------------------- */
-		const faqButtons = document.querySelectorAll('.goodTube_modal_question');
-		faqButtons.forEach(button => {
-			button.addEventListener('click', (event) => {
-				// Version conflict check
-				if (goodTube_versionConflict) {
-					return;
-				}
-
-				// Target the faq
-				const faq = event.currentTarget.closest('.goodTube_modal_faq');
-
-				// If the faq is already open
-				if (faq.getAttribute('data-open') === 'true') {
-					// Close it
-					faq.setAttribute('data-open', 'false');
-				}
-				// Otherwise, the faq is not already open
-				else {
-					// Deselect the currently opened answer (if it exists)
-					document.querySelector('.goodTube_modal_faq[data-open="true"]')?.setAttribute('data-open', 'false');
-
-					// Open the faq
-					faq.setAttribute('data-open', 'true');
-				}
-			});
-		});
-
 
 		/* Report an issue
 		-------------------------------------------------- */
@@ -3651,36 +3432,36 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
+			}
 
-				.goodTube_overlay_inner {
-					display: flex;
-					align-items: flex-start;
-					gap: 24px;
-					max-width: 560px;
+			#goodTube_hideMuteAdsOverlay .goodTube_overlay_inner {
+				display: flex;
+				align-items: flex-start;
+				gap: 24px;
+				max-width: 560px;
+			}
 
-					img {
-						width: 64px;
-						height: 50px;
-						min-width: 64px;
-						min-height: 50px;
-					}
+			#goodTube_hideMuteAdsOverlay .goodTube_overlay_inner img {
+				width: 64px;
+				height: 50px;
+				min-width: 64px;
+				min-height: 50px;
+			}
 
-					.goodTube_overlay_textContainer {
-						font-family: Roboto, Arial, sans-serif;
-						margin-top: -9px;
+			#goodTube_hideMuteAdsOverlay .goodTube_overlay_textContainer {
+				font-family: Roboto, Arial, sans-serif;
+				margin-top: -9px;
+			}
 
-						.goodTube_overlay_textContainer_title {
-							font-size: 24px;
-							font-weight: 700;
-						}
+			#goodTube_hideMuteAdsOverlay .goodTube_overlay_textContainer_title {
+				font-size: 24px;
+				font-weight: 700;
+			}
 
-						.goodTube_overlay_textContainer_text {
-							font-size: 17px;
-							font-style: italic;
-							padding-top: 8px;
-						}
-					}
-				}
+			#goodTube_hideMuteAdsOverlay .goodTube_overlay_textContainer_text {
+				font-size: 17px;
+				font-style: italic;
+				padding-top: 8px;
 			}
 		`;
 
