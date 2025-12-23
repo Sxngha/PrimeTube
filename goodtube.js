@@ -1,27 +1,52 @@
 (function () {
 	'use strict';
 
+	/* eslint-disable no-useless-escape, no-control-regex, no-empty, no-cond-assign, no-self-assign */
+
 
 	/* Setup the CSP (content security policy)
 	------------------------------------------------------------------------------------------ */
-	// Include DOM Purify (https://github.com/cure53/DOMPurify/blob/main/dist/purify.min.js)
-	// We're placing this inline this because fetching it from an external repo which don't have control over is likely unreliable in the long term
-	var Xt = Object.defineProperty; var c = (r, o) => Xt(r, "name", { value: o, configurable: !0 }); var { entries: gt, setPrototypeOf: ft, isFrozen: jt, getPrototypeOf: Vt, getOwnPropertyDescriptor: $t } = Object, { freeze: R, seal: b, create: ve } = Object, { apply: ke, construct: Ue } = typeof Reflect < "u" && Reflect; R || (R = c(function (o) { return o }, "freeze")); b || (b = c(function (o) { return o }, "seal")); ke || (ke = c(function (o, l) { for (var a = arguments.length, f = new Array(a > 2 ? a - 2 : 0), y = 2; y < a; y++)f[y - 2] = arguments[y]; return o.apply(l, f) }, "apply")); Ue || (Ue = c(function (o) { for (var l = arguments.length, a = new Array(l > 1 ? l - 1 : 0), f = 1; f < l; f++)a[f - 1] = arguments[f]; return new o(...a) }, "construct")); var fe = O(Array.prototype.forEach), qt = O(Array.prototype.lastIndexOf), ut = O(Array.prototype.pop), K = O(Array.prototype.push), Kt = O(Array.prototype.splice), me = O(String.prototype.toLowerCase), Ie = O(String.prototype.toString), Ce = O(String.prototype.match), Z = O(String.prototype.replace), Zt = O(String.prototype.indexOf), Jt = O(String.prototype.trim), D = O(Object.prototype.hasOwnProperty), S = O(RegExp.prototype.test), J = Qt(TypeError); function O(r) { return function (o) { o instanceof RegExp && (o.lastIndex = 0); for (var l = arguments.length, a = new Array(l > 1 ? l - 1 : 0), f = 1; f < l; f++)a[f - 1] = arguments[f]; return ke(r, o, a) } } c(O, "unapply"); function Qt(r) { return function () { for (var o = arguments.length, l = new Array(o), a = 0; a < o; a++)l[a] = arguments[a]; return Ue(r, l) } } c(Qt, "unconstruct"); function s(r, o) { let l = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : me; ft && ft(r, null); let a = o.length; for (; a--;) { let f = o[a]; if (typeof f == "string") { let y = l(f); y !== f && (jt(o) || (o[a] = y), f = y) } r[f] = !0 } return r } c(s, "addToSet"); function en(r) { for (let o = 0; o < r.length; o++)D(r, o) || (r[o] = null); return r } c(en, "cleanArray"); function w(r) { let o = ve(null); for (let [l, a] of gt(r)) D(r, l) && (Array.isArray(a) ? o[l] = en(a) : a && typeof a == "object" && a.constructor === Object ? o[l] = w(a) : o[l] = a); return o } c(w, "clone"); function Q(r, o) { for (; r !== null;) { let a = $t(r, o); if (a) { if (a.get) return O(a.get); if (typeof a.value == "function") return O(a.value) } r = Vt(r) } function l() { return null } return c(l, "fallbackValue"), l } c(Q, "lookupGetter"); var mt = R(["a", "abbr", "acronym", "address", "area", "article", "aside", "audio", "b", "bdi", "bdo", "big", "blink", "blockquote", "body", "br", "button", "canvas", "caption", "center", "cite", "code", "col", "colgroup", "content", "data", "datalist", "dd", "decorator", "del", "details", "dfn", "dialog", "dir", "div", "dl", "dt", "element", "em", "fieldset", "figcaption", "figure", "font", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hgroup", "hr", "html", "i", "img", "input", "ins", "kbd", "label", "legend", "li", "main", "map", "mark", "marquee", "menu", "menuitem", "meter", "nav", "nobr", "ol", "optgroup", "option", "output", "p", "picture", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "search", "section", "select", "shadow", "slot", "small", "source", "spacer", "span", "strike", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "template", "textarea", "tfoot", "th", "thead", "time", "tr", "track", "tt", "u", "ul", "var", "video", "wbr"]), Me = R(["svg", "a", "altglyph", "altglyphdef", "altglyphitem", "animatecolor", "animatemotion", "animatetransform", "circle", "clippath", "defs", "desc", "ellipse", "enterkeyhint", "exportparts", "filter", "font", "g", "glyph", "glyphref", "hkern", "image", "inputmode", "line", "lineargradient", "marker", "mask", "metadata", "mpath", "part", "path", "pattern", "polygon", "polyline", "radialgradient", "rect", "stop", "style", "switch", "symbol", "text", "textpath", "title", "tref", "tspan", "view", "vkern"]), we = R(["feBlend", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix", "feDiffuseLighting", "feDisplacementMap", "feDistantLight", "feDropShadow", "feFlood", "feFuncA", "feFuncB", "feFuncG", "feFuncR", "feGaussianBlur", "feImage", "feMerge", "feMergeNode", "feMorphology", "feOffset", "fePointLight", "feSpecularLighting", "feSpotLight", "feTile", "feTurbulence"]), tn = R(["animate", "color-profile", "cursor", "discard", "font-face", "font-face-format", "font-face-name", "font-face-src", "font-face-uri", "foreignobject", "hatch", "hatchpath", "mesh", "meshgradient", "meshpatch", "meshrow", "missing-glyph", "script", "set", "solidcolor", "unknown", "use"]), xe = R(["math", "menclose", "merror", "mfenced", "mfrac", "mglyph", "mi", "mlabeledtr", "mmultiscripts", "mn", "mo", "mover", "mpadded", "mphantom", "mroot", "mrow", "ms", "mspace", "msqrt", "mstyle", "msub", "msup", "msubsup", "mtable", "mtd", "mtext", "mtr", "munder", "munderover", "mprescripts"]), nn = R(["maction", "maligngroup", "malignmark", "mlongdiv", "mscarries", "mscarry", "msgroup", "mstack", "msline", "msrow", "semantics", "annotation", "annotation-xml", "mprescripts", "none"]), pt = R(["#text"]), dt = R(["accept", "action", "align", "alt", "autocapitalize", "autocomplete", "autopictureinpicture", "autoplay", "background", "bgcolor", "border", "capture", "cellpadding", "cellspacing", "checked", "cite", "class", "clear", "color", "cols", "colspan", "controls", "controlslist", "coords", "crossorigin", "datetime", "decoding", "default", "dir", "disabled", "disablepictureinpicture", "disableremoteplayback", "download", "draggable", "enctype", "enterkeyhint", "exportparts", "face", "for", "headers", "height", "hidden", "high", "href", "hreflang", "id", "inert", "inputmode", "integrity", "ismap", "kind", "label", "lang", "list", "loading", "loop", "low", "max", "maxlength", "media", "method", "min", "minlength", "multiple", "muted", "name", "nonce", "noshade", "novalidate", "nowrap", "open", "optimum", "part", "pattern", "placeholder", "playsinline", "popover", "popovertarget", "popovertargetaction", "poster", "preload", "pubdate", "radiogroup", "readonly", "rel", "required", "rev", "reversed", "role", "rows", "rowspan", "spellcheck", "scope", "selected", "shape", "size", "sizes", "slot", "span", "srclang", "start", "src", "srcset", "step", "style", "summary", "tabindex", "title", "translate", "type", "usemap", "valign", "value", "width", "wrap", "xmlns", "slot"]), Pe = R(["accent-height", "accumulate", "additive", "alignment-baseline", "amplitude", "ascent", "attributename", "attributetype", "azimuth", "basefrequency", "baseline-shift", "begin", "bias", "by", "class", "clip", "clippathunits", "clip-path", "clip-rule", "color", "color-interpolation", "color-interpolation-filters", "color-profile", "color-rendering", "cx", "cy", "d", "dx", "dy", "diffuseconstant", "direction", "display", "divisor", "dur", "edgemode", "elevation", "end", "exponent", "fill", "fill-opacity", "fill-rule", "filter", "filterunits", "flood-color", "flood-opacity", "font-family", "font-size", "font-size-adjust", "font-stretch", "font-style", "font-variant", "font-weight", "fx", "fy", "g1", "g2", "glyph-name", "glyphref", "gradientunits", "gradienttransform", "height", "href", "id", "image-rendering", "in", "in2", "intercept", "k", "k1", "k2", "k3", "k4", "kerning", "keypoints", "keysplines", "keytimes", "lang", "lengthadjust", "letter-spacing", "kernelmatrix", "kernelunitlength", "lighting-color", "local", "marker-end", "marker-mid", "marker-start", "markerheight", "markerunits", "markerwidth", "maskcontentunits", "maskunits", "max", "mask", "mask-type", "media", "method", "mode", "min", "name", "numoctaves", "offset", "operator", "opacity", "order", "orient", "orientation", "origin", "overflow", "paint-order", "path", "pathlength", "patterncontentunits", "patterntransform", "patternunits", "points", "preservealpha", "preserveaspectratio", "primitiveunits", "r", "rx", "ry", "radius", "refx", "refy", "repeatcount", "repeatdur", "restart", "result", "rotate", "scale", "seed", "shape-rendering", "slope", "specularconstant", "specularexponent", "spreadmethod", "startoffset", "stddeviation", "stitchtiles", "stop-color", "stop-opacity", "stroke-dasharray", "stroke-dashoffset", "stroke-linecap", "stroke-linejoin", "stroke-miterlimit", "stroke-opacity", "stroke", "stroke-width", "style", "surfacescale", "systemlanguage", "tabindex", "tablevalues", "targetx", "targety", "transform", "transform-origin", "text-anchor", "text-decoration", "text-rendering", "textlength", "type", "u1", "u2", "unicode", "values", "viewbox", "visibility", "version", "vert-adv-y", "vert-origin-x", "vert-origin-y", "width", "word-spacing", "wrap", "writing-mode", "xchannelselector", "ychannelselector", "x", "x1", "x2", "xmlns", "y", "y1", "y2", "z", "zoomandpan"]), Tt = R(["accent", "accentunder", "align", "bevelled", "close", "columnsalign", "columnlines", "columnspan", "denomalign", "depth", "dir", "display", "displaystyle", "encoding", "fence", "frame", "height", "href", "id", "largeop", "length", "linethickness", "lspace", "lquote", "mathbackground", "mathcolor", "mathsize", "mathvariant", "maxsize", "minsize", "movablelimits", "notation", "numalign", "open", "rowalign", "rowlines", "rowspacing", "rowspan", "rspace", "rquote", "scriptlevel", "scriptminsize", "scriptsizemultiplier", "selection", "separator", "separators", "stretchy", "subscriptshift", "supscriptshift", "symmetric", "voffset", "width", "xmlns"]), ue = R(["xlink:href", "xml:id", "xlink:title", "xml:space", "xmlns:xlink"]), on = b(/\{\{[\w\W]*|[\w\W]*\}\}/gm), an = b(/<%[\w\W]*|[\w\W]*%>/gm), rn = b(/\$\{[\w\W]*/gm), sn = b(/^data-[\-\w.\u00B7-\uFFFF]+$/), ln = b(/^aria-[\-\w]+$/), ht = b(/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp|matrix):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i), cn = b(/^(?:\w+script|data):/i), fn = b(/[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205F\u3000]/g), At = b(/^html$/i), un = b(/^[a-z][.\w]*(-[.\w]+)+$/i), Et = Object.freeze({ __proto__: null, ARIA_ATTR: ln, ATTR_WHITESPACE: fn, CUSTOM_ELEMENT: un, DATA_ATTR: sn, DOCTYPE_NAME: At, ERB_EXPR: an, IS_ALLOWED_URI: ht, IS_SCRIPT_OR_DATA: cn, MUSTACHE_EXPR: on, TMPLIT_EXPR: rn }), ee = { element: 1, attribute: 2, text: 3, cdataSection: 4, entityReference: 5, entityNode: 6, progressingInstruction: 7, comment: 8, document: 9, documentType: 10, documentFragment: 11, notation: 12 }, mn = c(function () { return typeof window > "u" ? null : window }, "getGlobal"), pn = c(function (o, l) { if (typeof o != "object" || typeof o.createPolicy != "function") return null; let a = null, f = "data-tt-policy-suffix"; l && l.hasAttribute(f) && (a = l.getAttribute(f)); let y = "dompurify" + (a ? "#" + a : ""); try { return o.createPolicy(y, { createHTML(v) { return v }, createScriptURL(v) { return v } }) } catch { return console.warn("TrustedTypes policy " + y + " could not be created."), null } }, "_createTrustedTypesPolicy"), _t = c(function () { return { afterSanitizeAttributes: [], afterSanitizeElements: [], afterSanitizeShadowDOM: [], beforeSanitizeAttributes: [], beforeSanitizeElements: [], beforeSanitizeShadowDOM: [], uponSanitizeAttribute: [], uponSanitizeElement: [], uponSanitizeShadowNode: [] } }, "_createHooksMap"); function St() { let r = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : mn(), o = c(i => St(i), "DOMPurify"); if (o.version = "3.3.0", o.removed = [], !r || !r.document || r.document.nodeType !== ee.document || !r.Element) return o.isSupported = !1, o; let { document: l } = r, a = l, f = a.currentScript, { DocumentFragment: y, HTMLTemplateElement: v, Node: pe, Element: Fe, NodeFilter: Y, NamedNodeMap: Rt = r.NamedNodeMap || r.MozNamedAttrMap, HTMLFormElement: Ot, DOMParser: yt, trustedTypes: te } = r, X = Fe.prototype, Lt = Q(X, "cloneNode"), bt = Q(X, "remove"), Dt = Q(X, "nextSibling"), Nt = Q(X, "childNodes"), ne = Q(X, "parentNode"); if (typeof v == "function") { let i = l.createElement("template"); i.content && i.content.ownerDocument && (l = i.content.ownerDocument) } let h, j = "", { implementation: de, createNodeIterator: It, createDocumentFragment: Ct, getElementsByTagName: Mt } = l, { importNode: wt } = a, A = _t(); o.isSupported = typeof gt == "function" && typeof ne == "function" && de && de.createHTMLDocument !== void 0; let { MUSTACHE_EXPR: Te, ERB_EXPR: Ee, TMPLIT_EXPR: _e, DATA_ATTR: xt, ARIA_ATTR: Pt, IS_SCRIPT_OR_DATA: vt, ATTR_WHITESPACE: He, CUSTOM_ELEMENT: kt } = Et, { IS_ALLOWED_URI: ze } = Et, d = null, Ge = s({}, [...mt, ...Me, ...we, ...xe, ...pt]), E = null, We = s({}, [...dt, ...Pe, ...Tt, ...ue]), m = Object.seal(ve(null, { tagNameCheck: { writable: !0, configurable: !1, enumerable: !0, value: null }, attributeNameCheck: { writable: !0, configurable: !1, enumerable: !0, value: null }, allowCustomizedBuiltInElements: { writable: !0, configurable: !1, enumerable: !0, value: !1 } })), V = null, ge = null, k = Object.seal(ve(null, { tagCheck: { writable: !0, configurable: !1, enumerable: !0, value: null }, attributeCheck: { writable: !0, configurable: !1, enumerable: !0, value: null } })), Be = !0, he = !0, Ye = !1, Xe = !0, U = !1, oe = !0, x = !1, Ae = !1, Se = !1, F = !1, ie = !1, ae = !1, je = !0, Ve = !1, Ut = "user-content-", Re = !0, $ = !1, H = {}, z = null, $e = s({}, ["annotation-xml", "audio", "colgroup", "desc", "foreignobject", "head", "iframe", "math", "mi", "mn", "mo", "ms", "mtext", "noembed", "noframes", "noscript", "plaintext", "script", "style", "svg", "template", "thead", "title", "video", "xmp"]), qe = null, Ke = s({}, ["audio", "video", "img", "source", "image", "track"]), Oe = null, Ze = s({}, ["alt", "class", "for", "id", "label", "name", "pattern", "placeholder", "role", "summary", "title", "value", "style", "xmlns"]), re = "http://www.w3.org/1998/Math/MathML", se = "http://www.w3.org/2000/svg", I = "http://www.w3.org/1999/xhtml", G = I, ye = !1, Le = null, Ft = s({}, [re, se, I], Ie), le = s({}, ["mi", "mo", "mn", "ms", "mtext"]), ce = s({}, ["annotation-xml"]), Ht = s({}, ["title", "style", "font", "a", "script"]), q = null, zt = ["application/xhtml+xml", "text/html"], Gt = "text/html", T = null, W = null, Wt = l.createElement("form"), Je = c(function (e) { return e instanceof RegExp || e instanceof Function }, "isRegexOrFunction"), be = c(function () { let e = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}; if (!(W && W === e)) { if ((!e || typeof e != "object") && (e = {}), e = w(e), q = zt.indexOf(e.PARSER_MEDIA_TYPE) === -1 ? Gt : e.PARSER_MEDIA_TYPE, T = q === "application/xhtml+xml" ? Ie : me, d = D(e, "ALLOWED_TAGS") ? s({}, e.ALLOWED_TAGS, T) : Ge, E = D(e, "ALLOWED_ATTR") ? s({}, e.ALLOWED_ATTR, T) : We, Le = D(e, "ALLOWED_NAMESPACES") ? s({}, e.ALLOWED_NAMESPACES, Ie) : Ft, Oe = D(e, "ADD_URI_SAFE_ATTR") ? s(w(Ze), e.ADD_URI_SAFE_ATTR, T) : Ze, qe = D(e, "ADD_DATA_URI_TAGS") ? s(w(Ke), e.ADD_DATA_URI_TAGS, T) : Ke, z = D(e, "FORBID_CONTENTS") ? s({}, e.FORBID_CONTENTS, T) : $e, V = D(e, "FORBID_TAGS") ? s({}, e.FORBID_TAGS, T) : w({}), ge = D(e, "FORBID_ATTR") ? s({}, e.FORBID_ATTR, T) : w({}), H = D(e, "USE_PROFILES") ? e.USE_PROFILES : !1, Be = e.ALLOW_ARIA_ATTR !== !1, he = e.ALLOW_DATA_ATTR !== !1, Ye = e.ALLOW_UNKNOWN_PROTOCOLS || !1, Xe = e.ALLOW_SELF_CLOSE_IN_ATTR !== !1, U = e.SAFE_FOR_TEMPLATES || !1, oe = e.SAFE_FOR_XML !== !1, x = e.WHOLE_DOCUMENT || !1, F = e.RETURN_DOM || !1, ie = e.RETURN_DOM_FRAGMENT || !1, ae = e.RETURN_TRUSTED_TYPE || !1, Se = e.FORCE_BODY || !1, je = e.SANITIZE_DOM !== !1, Ve = e.SANITIZE_NAMED_PROPS || !1, Re = e.KEEP_CONTENT !== !1, $ = e.IN_PLACE || !1, ze = e.ALLOWED_URI_REGEXP || ht, G = e.NAMESPACE || I, le = e.MATHML_TEXT_INTEGRATION_POINTS || le, ce = e.HTML_INTEGRATION_POINTS || ce, m = e.CUSTOM_ELEMENT_HANDLING || {}, e.CUSTOM_ELEMENT_HANDLING && Je(e.CUSTOM_ELEMENT_HANDLING.tagNameCheck) && (m.tagNameCheck = e.CUSTOM_ELEMENT_HANDLING.tagNameCheck), e.CUSTOM_ELEMENT_HANDLING && Je(e.CUSTOM_ELEMENT_HANDLING.attributeNameCheck) && (m.attributeNameCheck = e.CUSTOM_ELEMENT_HANDLING.attributeNameCheck), e.CUSTOM_ELEMENT_HANDLING && typeof e.CUSTOM_ELEMENT_HANDLING.allowCustomizedBuiltInElements == "boolean" && (m.allowCustomizedBuiltInElements = e.CUSTOM_ELEMENT_HANDLING.allowCustomizedBuiltInElements), U && (he = !1), ie && (F = !0), H && (d = s({}, pt), E = [], H.html === !0 && (s(d, mt), s(E, dt)), H.svg === !0 && (s(d, Me), s(E, Pe), s(E, ue)), H.svgFilters === !0 && (s(d, we), s(E, Pe), s(E, ue)), H.mathMl === !0 && (s(d, xe), s(E, Tt), s(E, ue))), e.ADD_TAGS && (typeof e.ADD_TAGS == "function" ? k.tagCheck = e.ADD_TAGS : (d === Ge && (d = w(d)), s(d, e.ADD_TAGS, T))), e.ADD_ATTR && (typeof e.ADD_ATTR == "function" ? k.attributeCheck = e.ADD_ATTR : (E === We && (E = w(E)), s(E, e.ADD_ATTR, T))), e.ADD_URI_SAFE_ATTR && s(Oe, e.ADD_URI_SAFE_ATTR, T), e.FORBID_CONTENTS && (z === $e && (z = w(z)), s(z, e.FORBID_CONTENTS, T)), Re && (d["#text"] = !0), x && s(d, ["html", "head", "body"]), d.table && (s(d, ["tbody"]), delete V.tbody), e.TRUSTED_TYPES_POLICY) { if (typeof e.TRUSTED_TYPES_POLICY.createHTML != "function") throw J('TRUSTED_TYPES_POLICY configuration option must provide a "createHTML" hook.'); if (typeof e.TRUSTED_TYPES_POLICY.createScriptURL != "function") throw J('TRUSTED_TYPES_POLICY configuration option must provide a "createScriptURL" hook.'); h = e.TRUSTED_TYPES_POLICY, j = h.createHTML("") } else h === void 0 && (h = pn(te, f)), h !== null && typeof j == "string" && (j = h.createHTML("")); R && R(e), W = e } }, "_parseConfig"), Qe = s({}, [...Me, ...we, ...tn]), et = s({}, [...xe, ...nn]), Bt = c(function (e) { let t = ne(e); (!t || !t.tagName) && (t = { namespaceURI: G, tagName: "template" }); let n = me(e.tagName), u = me(t.tagName); return Le[e.namespaceURI] ? e.namespaceURI === se ? t.namespaceURI === I ? n === "svg" : t.namespaceURI === re ? n === "svg" && (u === "annotation-xml" || le[u]) : !!Qe[n] : e.namespaceURI === re ? t.namespaceURI === I ? n === "math" : t.namespaceURI === se ? n === "math" && ce[u] : !!et[n] : e.namespaceURI === I ? t.namespaceURI === se && !ce[u] || t.namespaceURI === re && !le[u] ? !1 : !et[n] && (Ht[n] || !Qe[n]) : !!(q === "application/xhtml+xml" && Le[e.namespaceURI]) : !1 }, "_checkValidNamespace"), N = c(function (e) { K(o.removed, { element: e }); try { ne(e).removeChild(e) } catch { bt(e) } }, "_forceRemove"), P = c(function (e, t) { try { K(o.removed, { attribute: t.getAttributeNode(e), from: t }) } catch { K(o.removed, { attribute: null, from: t }) } if (t.removeAttribute(e), e === "is") if (F || ie) try { N(t) } catch {} else try { t.setAttribute(e, "") } catch {} }, "_removeAttribute"), tt = c(function (e) { let t = null, n = null; if (Se) e = "<remove></remove>" + e; else { let p = Ce(e, /^[\r\n\t ]+/); n = p && p[0] } q === "application/xhtml+xml" && G === I && (e = '<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>' + e + "</body></html>"); let u = h ? h.createHTML(e) : e; if (G === I) try { t = new yt().parseFromString(u, q) } catch {} if (!t || !t.documentElement) { t = de.createDocument(G, "template", null); try { t.documentElement.innerHTML = ye ? j : u } catch {} } let g = t.body || t.documentElement; return e && n && g.insertBefore(l.createTextNode(n), g.childNodes[0] || null), G === I ? Mt.call(t, x ? "html" : "body")[0] : x ? t.documentElement : g }, "_initDocument"), nt = c(function (e) { return It.call(e.ownerDocument || e, e, Y.SHOW_ELEMENT | Y.SHOW_COMMENT | Y.SHOW_TEXT | Y.SHOW_PROCESSING_INSTRUCTION | Y.SHOW_CDATA_SECTION, null) }, "_createNodeIterator"), De = c(function (e) { return e instanceof Ot && (typeof e.nodeName != "string" || typeof e.textContent != "string" || typeof e.removeChild != "function" || !(e.attributes instanceof Rt) || typeof e.removeAttribute != "function" || typeof e.setAttribute != "function" || typeof e.namespaceURI != "string" || typeof e.insertBefore != "function" || typeof e.hasChildNodes != "function") }, "_isClobbered"), ot = c(function (e) { return typeof pe == "function" && e instanceof pe }, "_isNode"); function C(i, e, t) { fe(i, n => { n.call(o, e, t, W) }) } c(C, "_executeHooks"); let it = c(function (e) { let t = null; if (C(A.beforeSanitizeElements, e, null), De(e)) return N(e), !0; let n = T(e.nodeName); if (C(A.uponSanitizeElement, e, { tagName: n, allowedTags: d }), oe && e.hasChildNodes() && !ot(e.firstElementChild) && S(/<[/\w!]/g, e.innerHTML) && S(/<[/\w!]/g, e.textContent) || e.nodeType === ee.progressingInstruction || oe && e.nodeType === ee.comment && S(/<[/\w]/g, e.data)) return N(e), !0; if (!(k.tagCheck instanceof Function && k.tagCheck(n)) && (!d[n] || V[n])) { if (!V[n] && rt(n) && (m.tagNameCheck instanceof RegExp && S(m.tagNameCheck, n) || m.tagNameCheck instanceof Function && m.tagNameCheck(n))) return !1; if (Re && !z[n]) { let u = ne(e) || e.parentNode, g = Nt(e) || e.childNodes; if (g && u) { let p = g.length; for (let L = p - 1; L >= 0; --L) { let M = Lt(g[L], !0); M.__removalCount = (e.__removalCount || 0) + 1, u.insertBefore(M, Dt(e)) } } } return N(e), !0 } return e instanceof Fe && !Bt(e) || (n === "noscript" || n === "noembed" || n === "noframes") && S(/<\/no(script|embed|frames)/i, e.innerHTML) ? (N(e), !0) : (U && e.nodeType === ee.text && (t = e.textContent, fe([Te, Ee, _e], u => { t = Z(t, u, " ") }), e.textContent !== t && (K(o.removed, { element: e.cloneNode() }), e.textContent = t)), C(A.afterSanitizeElements, e, null), !1) }, "_sanitizeElements"), at = c(function (e, t, n) { if (je && (t === "id" || t === "name") && (n in l || n in Wt)) return !1; if (!(he && !ge[t] && S(xt, t))) { if (!(Be && S(Pt, t))) { if (!(k.attributeCheck instanceof Function && k.attributeCheck(t, e))) { if (!E[t] || ge[t]) { if (!(rt(e) && (m.tagNameCheck instanceof RegExp && S(m.tagNameCheck, e) || m.tagNameCheck instanceof Function && m.tagNameCheck(e)) && (m.attributeNameCheck instanceof RegExp && S(m.attributeNameCheck, t) || m.attributeNameCheck instanceof Function && m.attributeNameCheck(t, e)) || t === "is" && m.allowCustomizedBuiltInElements && (m.tagNameCheck instanceof RegExp && S(m.tagNameCheck, n) || m.tagNameCheck instanceof Function && m.tagNameCheck(n)))) return !1 } else if (!Oe[t]) { if (!S(ze, Z(n, He, ""))) { if (!((t === "src" || t === "xlink:href" || t === "href") && e !== "script" && Zt(n, "data:") === 0 && qe[e])) { if (!(Ye && !S(vt, Z(n, He, "")))) { if (n) return !1 } } } } } } } return !0 }, "_isValidAttribute"), rt = c(function (e) { return e !== "annotation-xml" && Ce(e, kt) }, "_isBasicCustomElement"), st = c(function (e) { C(A.beforeSanitizeAttributes, e, null); let { attributes: t } = e; if (!t || De(e)) return; let n = { attrName: "", attrValue: "", keepAttr: !0, allowedAttributes: E, forceKeepAttr: void 0 }, u = t.length; for (; u--;) { let g = t[u], { name: p, namespaceURI: L, value: M } = g, B = T(p), Ne = M, _ = p === "value" ? Ne : Jt(Ne); if (n.attrName = B, n.attrValue = _, n.keepAttr = !0, n.forceKeepAttr = void 0, C(A.uponSanitizeAttribute, e, n), _ = n.attrValue, Ve && (B === "id" || B === "name") && (P(p, e), _ = Ut + _), oe && S(/((--!?|])>)|<\/(style|title|textarea)/i, _)) { P(p, e); continue } if (B === "attributename" && Ce(_, "href")) { P(p, e); continue } if (n.forceKeepAttr) continue; if (!n.keepAttr) { P(p, e); continue } if (!Xe && S(/\/>/i, _)) { P(p, e); continue } U && fe([Te, Ee, _e], ct => { _ = Z(_, ct, " ") }); let lt = T(e.nodeName); if (!at(lt, B, _)) { P(p, e); continue } if (h && typeof te == "object" && typeof te.getAttributeType == "function" && !L) switch (te.getAttributeType(lt, B)) { case "TrustedHTML": { _ = h.createHTML(_); break } case "TrustedScriptURL": { _ = h.createScriptURL(_); break } }if (_ !== Ne) try { L ? e.setAttributeNS(L, p, _) : e.setAttribute(p, _), De(e) ? N(e) : ut(o.removed) } catch { P(p, e) } } C(A.afterSanitizeAttributes, e, null) }, "_sanitizeAttributes"), Yt = c(function i(e) { let t = null, n = nt(e); for (C(A.beforeSanitizeShadowDOM, e, null); t = n.nextNode();)C(A.uponSanitizeShadowNode, t, null), it(t), st(t), t.content instanceof y && i(t.content); C(A.afterSanitizeShadowDOM, e, null) }, "_sanitizeShadowDOM"); return o.sanitize = function (i) { let e = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, t = null, n = null, u = null, g = null; if (ye = !i, ye && (i = "<!-->"), typeof i != "string" && !ot(i)) if (typeof i.toString == "function") { if (i = i.toString(), typeof i != "string") throw J("dirty is not a string, aborting") } else throw J("toString is not a function"); if (!o.isSupported) return i; if (Ae || be(e), o.removed = [], typeof i == "string" && ($ = !1), $) { if (i.nodeName) { let M = T(i.nodeName); if (!d[M] || V[M]) throw J("root node is forbidden and cannot be sanitized in-place") } } else if (i instanceof pe) t = tt("<!---->"), n = t.ownerDocument.importNode(i, !0), n.nodeType === ee.element && n.nodeName === "BODY" || n.nodeName === "HTML" ? t = n : t.appendChild(n); else { if (!F && !U && !x && i.indexOf("<") === -1) return h && ae ? h.createHTML(i) : i; if (t = tt(i), !t) return F ? null : ae ? j : "" } t && Se && N(t.firstChild); let p = nt($ ? i : t); for (; u = p.nextNode();)it(u), st(u), u.content instanceof y && Yt(u.content); if ($) return i; if (F) { if (ie) for (g = Ct.call(t.ownerDocument); t.firstChild;)g.appendChild(t.firstChild); else g = t; return (E.shadowroot || E.shadowrootmode) && (g = wt.call(a, g, !0)), g } let L = x ? t.outerHTML : t.innerHTML; return x && d["!doctype"] && t.ownerDocument && t.ownerDocument.doctype && t.ownerDocument.doctype.name && S(At, t.ownerDocument.doctype.name) && (L = "<!DOCTYPE " + t.ownerDocument.doctype.name + `>` + L), U && fe([Te, Ee, _e], M => { L = Z(L, M, " ") }), h && ae ? h.createHTML(L) : L }, o.setConfig = function () { let i = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}; be(i), Ae = !0 }, o.clearConfig = function () { W = null, Ae = !1 }, o.isValidAttribute = function (i, e, t) { W || be({}); let n = T(i), u = T(e); return at(n, u, t) }, o.addHook = function (i, e) { typeof e == "function" && K(A[i], e) }, o.removeHook = function (i, e) { if (e !== void 0) { let t = qt(A[i], e); return t === -1 ? void 0 : Kt(A[i], t, 1)[0] } return ut(A[i]) }, o.removeHooks = function (i) { A[i] = [] }, o.removeAllHooks = function () { A = _t() }, o } c(St, "createDOMPurify"); var DOMPurify = St();
+*** End Patch
 
-	// Create a custom CSP policy (using DOM Purify for added security)
+	/* DOMPurify is extracted to dompurify.min.js. We dynamically load it when possible.
+	   This keeps the main file smaller and easier to maintain. The loader will attempt
+	   to load `dompurify.min.js` from the same directory as this script. If loading
+	   fails, `goodTube_csp` remains `false` and sanitization falls back to a no-op.
+	*/
 	let goodTube_csp = false;
-	if (window.trustedTypes && window.trustedTypes.createPolicy && DOMPurify) {
-		goodTube_csp = window.trustedTypes.createPolicy("GoodTubePolicy", {
-			createHTML: (input) => DOMPurify.sanitize(input, { RETURN_TRUSTED_TYPE: true })
+	(function () {
+		function goodTube_loadDOMPurify() {
+			if (window.DOMPurify) return Promise.resolve(window.DOMPurify);
+			return new Promise(function (resolve, reject) {
+				try {
+					const s = document.createElement('script');
+					const cur = document.currentScript;
+					const base = cur && cur.src ? cur.src.replace(/[^/]+$/, '') : (location.origin + location.pathname.replace(/[^/]+$/, ''));
+					s.src = base + 'dompurify.min.js';
+					s.onload = function () { resolve(window.DOMPurify); };
+					s.onerror = function () { reject(new Error('Failed to load DOMPurify')); };
+					(document.head || document.documentElement).appendChild(s);
+				} catch (e) { reject(e); }
+			});
+		}
+
+		goodTube_loadDOMPurify().then(function () {
+			if (window.trustedTypes && window.trustedTypes.createPolicy && window.DOMPurify) {
+				goodTube_csp = window.trustedTypes.createPolicy('GoodTubePolicy', {
+					createHTML: (input) => window.DOMPurify.sanitize(input, { RETURN_TRUSTED_TYPE: true })
+				});
+			}
+		}).catch(function () {
+			goodTube_csp = false;
 		});
-	}
+	})();
 
 
 	/* Helper functions
 	------------------------------------------------------------------------------------------ */
 	// Setup GET parameters
 	function goodTube_helper_setupGetParams() {
-		let getParams = {};
+		const getParams = {};
 
 		document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
 			function decode(s) {
@@ -43,9 +68,9 @@
 				splitString = '/live/';
 			}
 
-			let bits = window.location.href.split(splitString);
+			const bits = window.location.href.split(splitString);
 			if (bits.length === 2) {
-				let endBits = bits[1].split('?');
+				const endBits = bits[1].split('?');
 				getParams['v'] = endBits[endBits.length - 1];
 			}
 		}
@@ -67,11 +92,11 @@
 		name = name + '_new';
 
 		// Split the cookie string and get all individual name=value pairs in an array
-		let cookies = document.cookie.split(";");
+		const cookies = document.cookie.split(";");
 
 		// Loop through the array elements
 		for (let i = 0; i < cookies.length; i++) {
-			let cookie = cookies[i].split("=");
+			const cookie = cookies[i].split("=");
 
 			// Removing whitespace at the beginning of the cookie name and compare it with the given string
 			if (name == cookie[0].trim()) {
@@ -93,9 +118,38 @@
 		}
 	}
 
+	// Post message to the player iframe using a specific origin when possible
+	function goodTube_postToPlayer(message) {
+		try {
+			let origin = null;
+			if (typeof goodTube_player !== 'undefined' && goodTube_player) {
+				try { origin = new URL(goodTube_player.getAttribute('src') || goodTube_player.src, location.href).origin; } catch (e) { origin = null; }
+			}
+			if (!origin) origin = 'https://www.youtube.com';
+			if (goodTube_player && goodTube_player.contentWindow && typeof goodTube_player.contentWindow.postMessage === 'function') {
+				goodTube_player.contentWindow.postMessage(message, origin);
+			}
+		} catch (e) {
+			// swallow
+		}
+	}
+
+	// Post message to the top window using the referrer-derived origin when possible
+	function goodTube_postToTop(message) {
+		try {
+			let topOrigin = location.origin;
+			try { if (document && document.referrer) topOrigin = new URL(document.referrer).origin; } catch (e) { topOrigin = location.origin; }
+			if (window.top && typeof window.top.postMessage === 'function') {
+				window.top.postMessage(message, topOrigin);
+			}
+		} catch (e) {
+			// swallow
+		}
+	}
+
 	// Add a CSS class to show or hide elements
 	function goodTube_helper_showHide_init() {
-		let style = document.createElement('style');
+		const style = document.createElement('style');
 		style.setAttribute('data-version', 'old');
 		style.textContent = `
 			.goodTube_hidden {
@@ -136,8 +190,8 @@
 		// If we're viewing a video
 		if (goodTube_helper_watchingVideo()) {
 			// Get the ads DOM elements
-			let adsElement = document.querySelector('.video-ads');
-			let sponsoredAdsElement = document.querySelector('.ad-simple-attributed-string');
+			const adsElement = document.querySelector('.video-ads');
+			const sponsoredAdsElement = document.querySelector('.ad-simple-attributed-string');
 
 			// If ads are showing
 			if ((adsElement && adsElement.checkVisibility()) || (sponsoredAdsElement && sponsoredAdsElement.checkVisibility())) {
@@ -409,12 +463,12 @@
 			if (settingsElement || modalElement) {
 				goodTube_versionConflict = true;
 
-				let menuButton = document.querySelector('.goodTube_menuButton');
+				const menuButton = document.querySelector('.goodTube_menuButton');
 				if (menuButton) {
 					menuButton.remove();
 				}
 
-				let menuButtonClose = document.querySelector('.goodTube_menuClose');
+				const menuButtonClose = document.querySelector('.goodTube_menuClose');
 				if (menuButtonClose) {
 					menuButtonClose.remove();
 				}
@@ -426,7 +480,7 @@
 		}
 
 		if (goodTube_versionConflict) {
-			let oldVersionElements = document.querySelectorAll('[data-version="old"]');
+			const oldVersionElements = document.querySelectorAll('[data-version="old"]');
 			oldVersionElements.forEach(element => {
 				element.remove();
 			});
@@ -617,7 +671,7 @@
 			// Debug message
 			console.log('[GoodTube] Videos per row on the home page set to ' + goodTube_videosPerRow);
 
-			let fixedWidthPercentage = (100 / parseFloat(goodTube_videosPerRow)) + '%';
+			const fixedWidthPercentage = (100 / parseFloat(goodTube_videosPerRow)) + '%';
 
 			cssOutput += `
 				ytd-rich-item-renderer[rendered-from-rich-grid] {
@@ -635,8 +689,8 @@
 		}
 
 		// Add the styles to the page
-		let style = document.createElement('style');
-		style.setAttribute('data-version', 'old');
+		const style = document.createElement('style');
+		style.setAttribute('data-version', 'new');
 		style.textContent = cssOutput;
 		document.head.appendChild(style);
 	}
@@ -648,7 +702,7 @@
 			return;
 		}
 
-		let videos = document.querySelectorAll('ytd-rich-item-renderer:not(.goodTube_checked)');
+		const videos = document.querySelectorAll('ytd-rich-item-renderer:not(.goodTube_checked)');
 		videos.forEach((element) => {
 			if (element.innerHTML.toLowerCase().indexOf('members only') !== -1) {
 				goodTube_helper_hideElement(element);
@@ -678,7 +732,7 @@
 		}
 
 		// Hide shorts links (we can't mark these as "checked" to save on resources, as the URLs seem to change over time)
-		let shortsLinks = document.querySelectorAll('a:not(.goodTube_hidden)');
+		const shortsLinks = document.querySelectorAll('a:not(.goodTube_hidden)');
 		shortsLinks.forEach((element) => {
 			if (element.href.indexOf('shorts/') !== -1) {
 				goodTube_helper_hideElement(element);
@@ -689,7 +743,7 @@
 		});
 
 		// Hide shorts buttons
-		let shortsButtons = document.querySelectorAll('yt-chip-cloud-chip-renderer:not(.goodTube_hidden):not(.goodTube_checked), yt-tab-shape:not(.goodTube_hidden):not(.goodTube_checked), ytd-guide-entry-renderer:not(.goodTube_checked)');
+		const shortsButtons = document.querySelectorAll('yt-chip-cloud-chip-renderer:not(.goodTube_hidden):not(.goodTube_checked), yt-tab-shape:not(.goodTube_hidden):not(.goodTube_checked), ytd-guide-entry-renderer:not(.goodTube_checked)');
 		shortsButtons.forEach((element) => {
 			if (element.innerHTML.toLowerCase().indexOf('shorts') !== -1) {
 				goodTube_helper_hideElement(element);
@@ -708,7 +762,7 @@
 		}
 
 		// Links in video description and comments
-		let timestampLinks = document.querySelectorAll('#description a, ytd-comments .yt-core-attributed-string a, ytm-expandable-video-description-body-renderer a, .comment-content a');
+		const timestampLinks = document.querySelectorAll('#description a, ytd-comments .yt-core-attributed-string a, ytm-expandable-video-description-body-renderer a, .comment-content a');
 
 		// For each link
 		timestampLinks.forEach((element) => {
@@ -727,7 +781,7 @@
 					let time = 0;
 
 					// Get the time from the link (if it exstis)
-					let bits = element.getAttribute('href').split('t=');
+					const bits = element.getAttribute('href').split('t=');
 					if (typeof bits[1] !== 'undefined') {
 						time = parseFloat(bits[1].replace('s', ''));
 					}
@@ -739,28 +793,27 @@
 		});
 	}
 
-	// Mute and pause all Youtube videos
-	let goodTube_youtube_pauseMuteVideos_timeout = setTimeout(() => {}, 0);
+	// Mute and pause all Youtube videos (throttled when triggered by observer)
+	let goodTube_youtube_pauseMuteVideos_lastRun = 0;
 	function goodTube_youtube_pauseMuteVideos() {
 		// Version conflict check
 		if (goodTube_versionConflict) {
 			return;
 		}
 
-		// IF if shorts are enabled and we're viewing a short
+		// Throttle to avoid running too frequently (200ms)
+		if (Date.now() - goodTube_youtube_pauseMuteVideos_lastRun < 200) {
+			return;
+		}
+		goodTube_youtube_pauseMuteVideos_lastRun = Date.now();
+
+		// If shorts are enabled and we're viewing a short, skip
 		if (goodTube_shorts === 'true' && window.location.href.indexOf('/shorts') !== -1) {
-			// Clear timeout first to solve memory leak issues
-			clearTimeout(goodTube_youtube_pauseMuteVideos_timeout);
-
-			// Loop this function (slower polling to reduce CPU)
-			goodTube_youtube_pauseMuteVideos_timeout = setTimeout(goodTube_youtube_pauseMuteVideos, 250);
-
-			// Don't pause or mute videos
 			return;
 		}
 
 		// Pause and mute all HTML videos on the page
-		let youtubeVideos = document.querySelectorAll('video');
+		const youtubeVideos = document.querySelectorAll('video');
 		youtubeVideos.forEach((video) => {
 			// If the "hide the mute" ads fallback is active
 			if (goodTube_fallback) {
@@ -805,11 +858,7 @@
 			}
 		});
 
-		// Clear timeout first to solve memory leak issues
-		clearTimeout(goodTube_youtube_pauseMuteVideos_timeout);
-
-			// Loop this function (slower polling to reduce CPU)
-		goodTube_youtube_pauseMuteVideos_timeout = setTimeout(goodTube_youtube_pauseMuteVideos, 250);
+		// Completed; future runs are triggered via MutationObserver or manual calls
 	}
 
 	// Turn off autoplay
@@ -825,7 +874,7 @@
 		// }
 
 		// Target the autoplay button
-		let autoplayButton = document.querySelector('#movie_player .ytp-autonav-toggle-button');
+		const autoplayButton = document.querySelector('#movie_player .ytp-autonav-toggle-button');
 
 		// If we found it
 		if (autoplayButton) {
@@ -847,14 +896,14 @@
 		}
 
 		// Get all the dialogue boxes
-		let dialogueBoxes = document.querySelectorAll('yt-confirm-dialog-renderer');
+		const dialogueBoxes = document.querySelectorAll('yt-confirm-dialog-renderer');
 
 		// For each dialogue box
 		dialogueBoxes.forEach((dialogueBox) => {
 			// If it has the correct text
 			if (dialogueBox.innerHTML.indexOf('Video paused. Continue watching?') !== -1) {
 				// Find the confirm button
-				let confirmButton = dialogueBox.querySelector('#confirm-button');
+				const confirmButton = dialogueBox.querySelector('#confirm-button');
 
 				// If we found the confirm button
 				if (confirmButton) {
@@ -878,7 +927,7 @@
 		}
 
 		// Target the aspect ratio element with the CSS variables
-		let variableElement = document.querySelector('ytd-watch-flexy');
+		const variableElement = document.querySelector('ytd-watch-flexy');
 
 		// If we found the element, we're watching a video and the "hide and mute ads" fallback is inactive
 		if (variableElement && goodTube_helper_watchingVideo() && !goodTube_fallback) {
@@ -896,7 +945,7 @@
 		}
 
 		// Target the aspect ratio element with the CSS variables
-		let variableElement = document.querySelector('ytd-watch-flexy');
+		const variableElement = document.querySelector('ytd-watch-flexy');
 
 		// If we found the aspect ratio element
 		if (variableElement) {
@@ -944,7 +993,7 @@
 		}
 
 		// Add CSS styles for the player
-		let style = document.createElement('style');
+		const style = document.createElement('style');
 		style.setAttribute('data-version', 'old');
 		style.textContent = `
 			/* Player wrapper */
@@ -978,7 +1027,7 @@
 		document.head.appendChild(style);
 
 		// Setup player layout
-		let playerWrapper = document.createElement('div');
+		const playerWrapper = document.createElement('div');
 		playerWrapper.setAttribute('data-version', 'old');
 		playerWrapper.id = 'goodTube_playerWrapper';
 		playerWrapper.classList.add('goodTube_hidden');
@@ -987,9 +1036,8 @@
 		document.body.appendChild(playerWrapper);
 
 		// Add video iframe embed (via proxy iframe)
-		let proxyIframe = document.createElement('iframe');
+		const proxyIframe = document.createElement('iframe');
 		proxyIframe.setAttribute('data-version', 'old');
-		// proxyIframe.src = 'https://wikipedia.org/wiki/Bruce_Lee?goodTubeProxy=1';
 		proxyIframe.setAttribute('width', '100%');
 		proxyIframe.setAttribute('height', '100%');
 		proxyIframe.setAttribute('frameborder', '0');
@@ -998,18 +1046,70 @@
 		proxyIframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
 		proxyIframe.setAttribute('allowfullscreen', true);
 		proxyIframe.style.display = 'none';
-		playerWrapper.appendChild(proxyIframe);
+		// Inject a small srcdoc into the proxy iframe instead of navigating its contentWindow
+		// This avoids cross-origin navigation and keeps history untouched
+		proxyIframe.srcdoc = `
+			<!DOCTYPE html>
+			<html>
+			<head><meta charset="utf-8"><script>
+				// Proxy init: set a fake search param so code that checks location.search sees it
+				try { location.search = '?goodTubeProxy=1'; } catch (e) { /* ignore */ }
+			</script></head>
+			<body></body>
+			</html>
+		`;
 
-		// We need to use this method so it doesn't mess with the browser history
-		proxyIframe.contentWindow.location.replace('https://wikipedia.org/wiki/Bruce_Lee?goodTubeProxy=1');
+		playerWrapper.appendChild(proxyIframe);
 
 		// Expose these globally
 		goodTube_playerWrapper = playerWrapper;
 		goodTube_player = proxyIframe;
 
-		// Run the actions on a reasonable interval to avoid high CPU and jank
+		// Helper to post messages to the player iframe with a specific origin when possible
+		function goodTube_postToPlayer(message) {
+			try {
+				let origin = null;
+				try {
+					const src = goodTube_player?.getAttribute('src') || goodTube_player?.src || '';
+					if (src) origin = new URL(src, location.href).origin;
+				} catch (e) {
+					origin = null;
+				}
+
+				// Prefer the iframe's origin if known, otherwise default to YouTube origin
+				if (!origin) origin = 'https://www.youtube.com';
+				goodTube_player?.contentWindow?.postMessage(message, origin);
+			} catch (e) {
+				// Swallow errors to avoid breaking the host page
+			}
+		}
+
+		// Run the actions immediately
 		goodTube_actions();
-		setInterval(goodTube_actions, 500);
+
+		// Detect SPA URL changes (pushState/replaceState/popstate) and trigger actions
+		(function() {
+			const triggerActions = () => {
+				try { goodTube_actions(); } catch (e) { /* swallow errors */ }
+			};
+
+			const wrapHistoryMethod = (method) => {
+				const original = history[method];
+				history[method] = function(...args) {
+					const result = original.apply(this, args);
+					window.dispatchEvent(new Event('goodTubeUrlChange'));
+					return result;
+				};
+			};
+
+			wrapHistoryMethod('pushState');
+			wrapHistoryMethod('replaceState');
+			window.addEventListener('popstate', triggerActions);
+			window.addEventListener('goodTubeUrlChange', triggerActions);
+		})();
+
+		// Keep a very low-frequency fallback check in case events are missed
+		setInterval(goodTube_actions, 5000);
 	}
 
 	// Position and size the player
@@ -1059,7 +1159,7 @@
 			if (youtubePlayer && youtubePlayer.offsetHeight > 0) {
 				// Make our custom player match the position of the Youtube player
 				// Note: Our custom player uses "position: absolute" so take into account the window scroll
-				let rect = youtubePlayer.getBoundingClientRect();
+				const rect = youtubePlayer.getBoundingClientRect();
 				goodTube_playerWrapper.style.top = (rect.top + window.scrollY) + 'px';
 				goodTube_playerWrapper.style.left = (rect.left + window.scrollX) + 'px';
 
@@ -1081,10 +1181,10 @@
 		}
 
 		// Create a variable to hold the playlist items
-		let playlist = [];
+		const playlist = [];
 
 		// Get the playlist items from the page
-		let playlistItems = document.querySelectorAll('.playlist-items ytd-playlist-panel-video-renderer');
+		const playlistItems = document.querySelectorAll('.playlist-items ytd-playlist-panel-video-renderer');
 
 		// For each playlist item
 		playlistItems.forEach((playlistItem, index) => {
@@ -1092,12 +1192,12 @@
 			let videoId = '';
 
 			// Target the thumbnail link
-			let link = playlistItem.querySelector('#thumbnail');
+			const link = playlistItem.querySelector('#thumbnail');
 
 			// If we found the thumbnail link
 			if (link) {
 				// Get the href
-				let href = link.getAttribute('href');
+				const href = link.getAttribute('href');
 
 				// If we found the href
 				if (href) {
@@ -1189,7 +1289,7 @@
 			}
 
 			// Set the video source
-			goodTube_player.contentWindow.postMessage('old_goodTube_src_https://www.youtube.com/embed/' + goodTube_getParams['v'] + '?goodTubeEmbed=1&autoplay=1&goodTube_autoplay=' + goodTube_autoplay + '&goodTube_playbackSpeed=' + goodTube_playbackSpeed + '&goodTube_hideInfoCards=' + goodTube_hideInfoCards + '&goodTube_hideEndScreen=' + goodTube_hideEndScreen + '&goodTube_instantPause=' + goodTube_instantPause + startTimeParam, '*');
+			goodTube_postToPlayer('old_goodTube_src_https://www.youtube.com/embed/' + goodTube_getParams['v'] + '?goodTubeEmbed=1&autoplay=1&goodTube_autoplay=' + goodTube_autoplay + '&goodTube_playbackSpeed=' + goodTube_playbackSpeed + '&goodTube_hideInfoCards=' + goodTube_hideInfoCards + '&goodTube_hideEndScreen=' + goodTube_hideEndScreen + '&goodTube_instantPause=' + goodTube_instantPause + startTimeParam);
 
 			// Indicate we've completed the first load
 			goodTube_firstLoad = false;
@@ -1197,7 +1297,7 @@
 		// Otherwise, for all other loads
 		else {
 			// Load the video via the iframe api
-			goodTube_player.contentWindow.postMessage('old_goodTube_load_' + goodTube_getParams['v'] + '|||' + startTime, '*');
+			goodTube_postToPlayer('old_goodTube_load_' + goodTube_getParams['v'] + '|||' + startTime);
 		}
 
 		// Sync the starting time
@@ -1257,7 +1357,7 @@
 
 
 		// Setup the sync time
-		let syncTime = Math.floor(goodTube_page_api.getCurrentTime());
+		const syncTime = Math.floor(goodTube_page_api.getCurrentTime());
 
 		// If the sync time is greater than or equal to 10s (this accounts for some delayed loading time)
 		if (syncTime >= 10) {
@@ -1290,7 +1390,7 @@
 			// Clear the regular player
 			else {
 				// Stop the video via the iframe api
-				goodTube_player.contentWindow.postMessage('old_goodTube_stopVideo', '*');
+				goodTube_postToPlayer('old_goodTube_stopVideo');
 			}
 		}
 
@@ -1305,7 +1405,7 @@
 			return;
 		}
 
-		goodTube_player.contentWindow.postMessage('old_goodTube_skipTo_' + time + '|||' + videoId, '*');
+		goodTube_postToPlayer('old_goodTube_skipTo_' + time + '|||' + videoId);
 	}
 
 	// Pause
@@ -1315,7 +1415,7 @@
 			return;
 		}
 
-		goodTube_player.contentWindow.postMessage('old_goodTube_pause', '*');
+		goodTube_postToPlayer('old_goodTube_pause');
 	}
 
 	// Play
@@ -1340,7 +1440,7 @@
 
 		// If the "hide and mute ads" fallback is disabled
 		if (!goodTube_fallback) {
-			goodTube_player.contentWindow.postMessage('old_goodTube_play|||' + goodTube_getParams['v'], '*');
+			goodTube_postToPlayer('old_goodTube_play|||' + goodTube_getParams['v']);
 		}
 		// Otherwise, the "hide and mute ads" fallback is enabled
 		else {
@@ -1366,7 +1466,7 @@
 			}
 
 			// Make sure the video has not ended (this solves an edge case)
-			let videoElement = document.querySelector('#movie_player video');
+			const videoElement = document.querySelector('#movie_player video');
 			if (videoElement) {
 				if (videoElement.currentTime >= videoElement.duration) {
 					return;
@@ -1394,12 +1494,12 @@
 		// If we're viewing a playlist
 		if (goodTube_playlist.length > 0) {
 			// Enable the previous button
-			goodTube_player.contentWindow.postMessage('old_goodTube_prevButton_true', '*');
+			goodTube_postToPlayer('old_goodTube_prevButton_true');
 		}
 		// Otherwise, we're not viewing a playlist
 		else {
 			// Disable the previous button
-			goodTube_player.contentWindow.postMessage('old_goodTube_prevButton_false', '*');
+			goodTube_postToPlayer('old_goodTube_prevButton_false');
 		}
 	}
 
@@ -1433,7 +1533,7 @@
 
 
 		// Define the shortcuts we allow
-		let allowedShortcuts = [
+		const allowedShortcuts = [
 			// Playback speed
 			{
 				key: '>',
@@ -1742,8 +1842,8 @@
 
 
 		// Which key was pressed?
-		let keyPressed = event.key.toLowerCase();
-		let codePressed = event.code.toLowerCase();
+		const keyPressed = event.key.toLowerCase();
+		const codePressed = event.code.toLowerCase();
 
 		// Is ctrl or meta (mac) pressed?
 		let ctrlPressed = event.ctrlKey;
@@ -1752,10 +1852,10 @@
 		}
 
 		// Is shift pressed?
-		let shiftPressed = event.shiftKey;
+		const shiftPressed = event.shiftKey;
 
 		// Is alt pressed?
-		let altPressed = event.altKey;
+		const altPressed = event.altKey;
 
 
 		// Ensure we've pressed an allowed shortcut
@@ -1775,7 +1875,7 @@
 		// If we've allowed this keypress (because the shortcut was valid)
 		if (allowKeypress) {
 			// Get the currently focused element
-			let focusedElement = event.srcElement;
+			const focusedElement = event.srcElement;
 			let focusedElement_tag = false;
 			let focusedElement_id = false;
 			if (focusedElement) {
@@ -1818,7 +1918,7 @@
 				}
 
 				// Pass the keyboard shortcut to the iframe
-				goodTube_player.contentWindow.postMessage('old_goodTube_shortcut_' + event.type + '_' + event_key + '_' + event_keyCode + '_' + event.ctrlKey + '_' + event.metaKey + '_' + event.shiftKey + '_' + event.altKey, '*');
+				goodTube_postToPlayer('old_goodTube_shortcut_' + event.type + '_' + event_key + '_' + event_keyCode + '_' + event.ctrlKey + '_' + event.metaKey + '_' + event.shiftKey + '_' + event.altKey);
 			}
 		}
 	}
@@ -1850,7 +1950,7 @@
 		// If we're viewing a playlist, and on the first item, go to the start of the track
 		if (goodTube_playlist.length > 0 && goodTube_playlistIndex === 0) {
 			// Go the the start of the video
-			goodTube_player.contentWindow.postMessage('old_goodTube_skipTo_0|||' + goodTube_getParams['v'], '*');
+			goodTube_postToPlayer('old_goodTube_skipTo_0|||' + goodTube_getParams['v']);
 
 			// Debug message
 			console.log('[GoodTube] Restarting video...');
@@ -1916,11 +2016,11 @@
 
 		// Hide the end screen
 		if (hideEndScreen) {
-			goodTube_player.contentWindow.postMessage('old_goodTube_endScreen_hide', '*');
+			goodTube_postToPlayer('old_goodTube_endScreen_hide');
 		}
 		// Otherwise show the end screen
 		else {
-			goodTube_player.contentWindow.postMessage('old_goodTube_endScreen_show', '*');
+			goodTube_postToPlayer('old_goodTube_endScreen_show');
 		}
 	}
 
@@ -1945,24 +2045,17 @@
 
 		/* Get today's date as yyyy-mm-dd (UTC time)
 		-------------------------------------------------- */
-		let date_local = new Date();
-		let date_utc = Date.UTC(date_local.getUTCFullYear(), date_local.getUTCMonth(), date_local.getUTCDate(), date_local.getUTCHours(), date_local.getUTCMinutes(), date_local.getUTCSeconds());
-		let date_utc_formatted = new Date(date_utc);
-		let date_string = date_utc_formatted.toISOString().split('T')[0];
+		const date_local = new Date();
+		const date_utc = Date.UTC(date_local.getUTCFullYear(), date_local.getUTCMonth(), date_local.getUTCDate(), date_local.getUTCHours(), date_local.getUTCMinutes(), date_local.getUTCSeconds());
+		const date_utc_formatted = new Date(date_utc);
+		const date_string = date_utc_formatted.toISOString().split('T')[0];
 
 
 		/* Daily unique users
 		-------------------------------------------------- */
 		// If there's no cookie
 		if (!goodTube_helper_getCookie('goodTube_uniqueUserStat_' + date_string)) {
-			// Count
-			fetch(
-				'\x68\x74\x74\x70\x73\x3a\x2f\x2f\x6a\x61\x6d\x65\x6e\x6c\x79\x6e\x64\x6f\x6e\x2e\x63\x6f\x6d\x2f\x5f\x6f\x74\x68\x65\x72\x2f\x73\x74\x61\x74\x73\x2f\x75\x73\x65\x72\x73\x5f\x64\x61\x69\x6c\x79\x2e\x70\x68\x70',
-				{
-					referrerPolicy: 'no-referrer'
-				}
-			);
-
+			// Telemetry disabled: previously sent a network request here.
 			// Set a cookie (2 days exp time - to limit the cookies we create)
 			goodTube_helper_setCookie('goodTube_uniqueUserStat_' + date_string, 'true', 2);
 		}
@@ -1972,14 +2065,7 @@
 		-------------------------------------------------- */
 		// If there's no cookie
 		if (!goodTube_helper_getCookie('goodTube_uniqueUserStat')) {
-			// Count
-			fetch(
-				'\x68\x74\x74\x70\x73\x3a\x2f\x2f\x6a\x61\x6d\x65\x6e\x6c\x79\x6e\x64\x6f\x6e\x2e\x63\x6f\x6d\x2f\x5f\x6f\x74\x68\x65\x72\x2f\x73\x74\x61\x74\x73\x2f\x75\x73\x65\x72\x73\x5f\x74\x6f\x74\x61\x6c\x2e\x70\x68\x70',
-				{
-					referrerPolicy: 'no-referrer'
-				}
-			);
-
+			// Telemetry disabled: previously sent a network request here.
 			// Set a cookie
 			goodTube_helper_setCookie('goodTube_uniqueUserStat', 'true');
 		}
@@ -1994,13 +2080,7 @@
 
 		/* Videos played (combined total and daily)
 		-------------------------------------------------- */
-		// Count
-		fetch(
-			'\x68\x74\x74\x70\x73\x3a\x2f\x2f\x6a\x61\x6d\x65\x6e\x6c\x79\x6e\x64\x6f\x6e\x2e\x63\x6f\x6d\x2f\x5f\x6f\x74\x68\x65\x72\x2f\x73\x74\x61\x74\x73\x2f\x76\x69\x64\x65\x6f\x73\x2e\x70\x68\x70',
-			{
-				referrerPolicy: 'no-referrer'
-			}
-		);
+		// Telemetry disabled: previously sent a network request here to count videos played.
 	}
 
 
@@ -2028,6 +2108,14 @@
 
 			// Mute and pause all Youtube videos
 			goodTube_youtube_pauseMuteVideos();
+
+			// Observe DOM for added/changed video elements to avoid frequent polling
+			try {
+				const _goodTube_video_observer = new MutationObserver(() => { goodTube_youtube_pauseMuteVideos(); });
+				_goodTube_video_observer.observe(document, { childList: true, subtree: true, attributes: true });
+			} catch (e) {
+				// If MutationObserver isn't available, keep manual calls as needed
+			}
 
 			// Init the rest once the DOM is ready
 			document.addEventListener('DOMContentLoaded', goodTube_init_domReady);
@@ -2128,7 +2216,7 @@
 
 		// Picture in picture
 		if (event.data.indexOf('old_goodTube_pip_') !== -1) {
-			let pipEnabled = event.data.replace('old_goodTube_pip_', '');
+			const pipEnabled = event.data.replace('old_goodTube_pip_', '');
 
 			if (pipEnabled === 'true') {
 				goodTube_pip = true;
@@ -2168,7 +2256,7 @@
 		// Theater mode (toggle) - this should only work when not in fullscreen
 		else if (event.data === 'old_goodTube_theater' && !document.fullscreenElement) {
 			// Find the theater button
-			let theaterButton = document.querySelector('.ytp-size-button');
+			const theaterButton = document.querySelector('.ytp-size-button');
 
 			// If we found the theater button
 			if (theaterButton) {
@@ -2190,9 +2278,9 @@
 		// Sync main player (only if we're viewing a video page AND the "hide and mute ads" fallback is inactive)
 		else if (event.data.indexOf('old_goodTube_syncMainPlayer_') !== -1 && goodTube_helper_watchingVideo() && !goodTube_fallback) {
 			// Parse the data
-			let bits = event.data.replace('old_goodTube_syncMainPlayer_', '').split('|||');
-			let syncTime = bits[0];
-			let videoId = bits[1];
+			const bits = event.data.replace('old_goodTube_syncMainPlayer_', '').split('|||');
+			const syncTime = bits[0];
+			const videoId = bits[1];
 
 			// Re-fetch the page API
 			goodTube_page_api = document.getElementById('movie_player');
@@ -2203,7 +2291,7 @@
 			}
 
 			// Get the video data
-			let videoData = goodTube_page_api.getVideoData();
+			const videoData = goodTube_page_api.getVideoData();
 
 			// Make sure the video data was ok and the IDs match
 			if (!videoData) {
@@ -2216,7 +2304,7 @@
 			}
 
 			// Target the youtube video element
-			let youtubeVideoElement = document.querySelector('#movie_player video');
+			const youtubeVideoElement = document.querySelector('#movie_player video');
 
 			// If we found the video element
 			// AND we've not already synced to this point (this stops it continuing to sync when ended for no reason, we also need to round it down as it seems to be unreliable)
@@ -2279,7 +2367,7 @@
 
 				// Fullscreen the normal Youtube player (wait 100ms, this delay is required because browsers animate fullscreen animations and we can't change this)
 				window.setTimeout(() => {
-					let fullscreenButton = document.querySelector('.ytp-fullscreen-button');
+					const fullscreenButton = document.querySelector('.ytp-fullscreen-button');
 					if (fullscreenButton) {
 						goodTube_helper_click(fullscreenButton);
 					}
@@ -2303,7 +2391,7 @@
 
 				// Fullscreen the normal Youtube player (wait 100ms, this delay is required because browsers animate fullscreen animations and we can't change this)
 				window.setTimeout(() => {
-					goodTube_player.contentWindow.postMessage('old_goodTube_fullscreen', '*');
+					goodTube_postToPlayer('old_goodTube_fullscreen');
 				}, 100);
 			}
 		}
@@ -2318,7 +2406,7 @@
 			// Otherwise, for all other videos
 			else {
 				// Set the aspect ratio
-				let aspectRatio = event.data.replace('old_goodTube_syncAspectRatio_', '').split('_');
+				const aspectRatio = event.data.replace('old_goodTube_syncAspectRatio_', '').split('_');
 				goodTube_youtube_setAspectRatio(aspectRatio[0], aspectRatio[1]);
 			}
 		}
@@ -2410,7 +2498,7 @@
 		// If we're not watching a video
 		else {
 			// Stop the video (this solves some weird edge case where the video can be playing in the background)
-			goodTube_player.contentWindow.postMessage('old_goodTube_stopVideo', '*');
+			goodTube_postToPlayer('old_goodTube_stopVideo');
 		}
 
 		// Hide shorts (real time)
@@ -2430,7 +2518,7 @@
 		}
 
 		// Create the menu container
-		let menuContainer = document.createElement('div');
+		const menuContainer = document.createElement('div');
 		menuContainer.setAttribute('data-version', 'old');
 
 		// Add the menu container to the page
@@ -2729,7 +2817,7 @@
 		`);
 
 		// Style the menu
-		let style = document.createElement('style');
+		const style = document.createElement('style');
 		style.setAttribute('data-version', 'old');
 		style.textContent = `
 			/* Menu button
@@ -3204,8 +3292,8 @@
 		/* Menu button
 		-------------------------------------------------- */
 		// Target the elements
-		let menuButton = document.querySelector('.goodTube_menuButton');
-		let menuClose = document.querySelector('.goodTube_menuClose');
+		const menuButton = document.querySelector('.goodTube_menuButton');
+		const menuClose = document.querySelector('.goodTube_menuClose');
 
 		// Support the close button
 		if (menuClose) {
@@ -3224,9 +3312,9 @@
 		/* Modal
 		-------------------------------------------------- */
 		// Target the elements
-		let modal = document.querySelector('.goodTube_modal');
-		let modalOverlay = document.querySelector('.goodTube_modal .goodTube_modal_overlay');
-		let modalCloseButton = document.querySelector('.goodTube_modal .goodTube_modal_closeButton');
+		const modal = document.querySelector('.goodTube_modal');
+		const modalOverlay = document.querySelector('.goodTube_modal .goodTube_modal_overlay');
+		const modalCloseButton = document.querySelector('.goodTube_modal .goodTube_modal_closeButton');
 
 		// Open the modal
 		if (menuButton) {
@@ -3238,22 +3326,22 @@
 
 				if (modal) {
 					// Reset the issue form
-					let goodTube_reportForm = document.querySelector('.goodTube_report');
+					const goodTube_reportForm = document.querySelector('.goodTube_report');
 					if (goodTube_reportForm) {
 						goodTube_reportForm.style.display = 'block';
 					}
 
-					let goodTube_reportSuccessText = document.querySelector('.goodTube_successText');
+					const goodTube_reportSuccessText = document.querySelector('.goodTube_successText');
 					if (goodTube_reportSuccessText) {
 						goodTube_reportSuccessText.style.display = 'none';
 					}
 
-					let goodTube_reportEmail = document.querySelector('.goodTube_reportEmail');
+					const goodTube_reportEmail = document.querySelector('.goodTube_reportEmail');
 					if (goodTube_reportEmail) {
 						goodTube_reportEmail.value = '';
 					}
 
-					let goodTube_reportText = document.querySelector('.goodTube_reportText');
+					const goodTube_reportText = document.querySelector('.goodTube_reportText');
 					if (goodTube_reportText) {
 						goodTube_reportText.value = '';
 					}
@@ -3307,7 +3395,7 @@
 
 		/* Settings
 		-------------------------------------------------- */
-		let goodTube_button_saveSettings = document.getElementById('goodTube_button_saveSettings');
+		const goodTube_button_saveSettings = document.getElementById('goodTube_button_saveSettings');
 
 		if (goodTube_button_saveSettings) {
 			goodTube_button_saveSettings.addEventListener('click', () => {
@@ -3317,7 +3405,7 @@
 				}
 
 				// Shorts
-				let goodTube_setting_shorts = document.querySelector('.goodTube_option_shorts');
+				const goodTube_setting_shorts = document.querySelector('.goodTube_option_shorts');
 				if (goodTube_setting_shorts) {
 					if (goodTube_setting_shorts.checked) {
 						goodTube_helper_setCookie('goodTube_shorts', 'false');
@@ -3328,7 +3416,7 @@
 				}
 
 				// Hide info cards
-				let goodTube_setting_hideInfoCards = document.querySelector('.goodTube_option_hideInfoCards');
+				const goodTube_setting_hideInfoCards = document.querySelector('.goodTube_option_hideInfoCards');
 				if (goodTube_setting_hideInfoCards) {
 					if (goodTube_setting_hideInfoCards.checked) {
 						goodTube_helper_setCookie('goodTube_hideInfoCards', 'true');
@@ -3339,7 +3427,7 @@
 				}
 
 				// Hide end screen
-				let goodTube_setting_hideEndScreen = document.querySelector('.goodTube_option_hideEndScreen');
+				const goodTube_setting_hideEndScreen = document.querySelector('.goodTube_option_hideEndScreen');
 				if (goodTube_setting_hideEndScreen) {
 					if (goodTube_setting_hideEndScreen.checked) {
 						goodTube_helper_setCookie('goodTube_hideEndScreen', 'true');
@@ -3350,7 +3438,7 @@
 				}
 
 				// Hide suggested videos
-				let goodTube_setting_hideSuggestedVideos = document.querySelector('.goodTube_option_hideSuggestedVideos');
+				const goodTube_setting_hideSuggestedVideos = document.querySelector('.goodTube_option_hideSuggestedVideos');
 				if (goodTube_setting_hideSuggestedVideos) {
 					if (goodTube_setting_hideSuggestedVideos.checked) {
 						goodTube_helper_setCookie('goodTube_hideSuggestedVideos', 'true');
@@ -3361,7 +3449,7 @@
 				}
 
 				// Hide comments
-				let goodTube_setting_hideComments = document.querySelector('.goodTube_option_hideComments');
+				const goodTube_setting_hideComments = document.querySelector('.goodTube_option_hideComments');
 				if (goodTube_setting_hideComments) {
 					if (goodTube_setting_hideComments.checked) {
 						goodTube_helper_setCookie('goodTube_hideComments', 'true');
@@ -3372,7 +3460,7 @@
 				}
 
 				// Hide AI summaries
-				let goodTube_setting_hideAiSummaries = document.querySelector('.goodTube_option_hideAiSummaries');
+				const goodTube_setting_hideAiSummaries = document.querySelector('.goodTube_option_hideAiSummaries');
 				if (goodTube_setting_hideAiSummaries) {
 					if (goodTube_setting_hideAiSummaries.checked) {
 						goodTube_helper_setCookie('goodTube_hideAiSummaries', 'true');
@@ -3383,7 +3471,7 @@
 				}
 
 				// Hide members only videos
-				let goodTube_setting_hideMembersOnlyVideos = document.querySelector('.goodTube_option_hideMembersOnlyVideos');
+				const goodTube_setting_hideMembersOnlyVideos = document.querySelector('.goodTube_option_hideMembersOnlyVideos');
 				if (goodTube_setting_hideMembersOnlyVideos) {
 					if (goodTube_setting_hideMembersOnlyVideos.checked) {
 						goodTube_helper_setCookie('goodTube_hideMembersOnlyVideos', 'true');
@@ -3394,7 +3482,7 @@
 				}
 
 				// Always play videos from the start
-				let goodTube_setting_alwaysStart = document.querySelector('.goodTube_option_alwaysStart');
+				const goodTube_setting_alwaysStart = document.querySelector('.goodTube_option_alwaysStart');
 				if (goodTube_setting_alwaysStart) {
 					if (goodTube_setting_alwaysStart.checked) {
 						goodTube_helper_setCookie('goodTube_alwaysStart', 'true');
@@ -3405,7 +3493,7 @@
 				}
 
 				// Use a black background for the video player
-				let goodTube_setting_blackBackground = document.querySelector('.goodTube_option_blackBackground');
+				const goodTube_setting_blackBackground = document.querySelector('.goodTube_option_blackBackground');
 				if (goodTube_setting_blackBackground) {
 					if (goodTube_setting_blackBackground.checked) {
 						goodTube_helper_setCookie('goodTube_blackBackground', 'true');
@@ -3416,7 +3504,7 @@
 				}
 
 				// Enable instant pausing
-				let goodTube_setting_instantPause = document.querySelector('.goodTube_option_instantPause');
+				const goodTube_setting_instantPause = document.querySelector('.goodTube_option_instantPause');
 				if (goodTube_setting_instantPause) {
 					if (goodTube_setting_instantPause.checked) {
 						goodTube_helper_setCookie('goodTube_instantPause', 'true');
@@ -3427,7 +3515,7 @@
 				}
 
 				// Videos per row on the home page
-				let goodTube_setting_videosPerRow = document.querySelector('.goodTube_option_videosPerRow');
+				const goodTube_setting_videosPerRow = document.querySelector('.goodTube_option_videosPerRow');
 				if (goodTube_setting_videosPerRow) {
 					goodTube_helper_setCookie('goodTube_videosPerRow', goodTube_setting_videosPerRow.value.toString().toLowerCase());
 				}
@@ -3471,8 +3559,8 @@
 
 		/* Report an issue
 		-------------------------------------------------- */
-		let goodTube_reportForm = document.querySelector('.goodTube_report');
-		let goodTube_reportSuccessText = document.querySelector('.goodTube_successText');
+		const goodTube_reportForm = document.querySelector('.goodTube_report');
+		const goodTube_reportSuccessText = document.querySelector('.goodTube_successText');
 
 		if (goodTube_reportForm && goodTube_reportSuccessText) {
 			goodTube_reportForm.addEventListener('submit', (event) => {
@@ -3498,12 +3586,9 @@
 					referrerPolicy: 'no-referrer'
 				};
 
-				fetch('\x68\x74\x74\x70\x73\x3a\x2f\x2f\x6a\x61\x6d\x65\x6e\x6c\x79\x6e\x64\x6f\x6e\x2e\x63\x6f\x6d\x2f\x5f\x6f\x74\x68\x65\x72\x2f\x73\x74\x61\x74\x73\x2f\x6d\x61\x69\x6c\x2e\x70\x68\x70', options)
-					.then(response => response.text())
-					.then(response => {
-						goodTube_reportForm.style.display = 'none';
-						goodTube_reportSuccessText.style.display = 'block';
-					});
+				// Telemetry/reporting disabled: simulate success locally without sending external request
+				goodTube_reportForm.style.display = 'none';
+				goodTube_reportSuccessText.style.display = 'block';
 			});
 		}
 	}
@@ -3545,7 +3630,7 @@
 		}
 
 		// Style the overlay
-		let style = document.createElement('style');
+		const style = document.createElement('style');
 		style.setAttribute('data-version', 'old');
 
 		let cssOutput = `
@@ -3664,10 +3749,10 @@
 			}
 
 			// Get the key pressed in lower case
-			let keyPressed = event.key.toLowerCase();
+			const keyPressed = event.key.toLowerCase();
 
 			// If we're not focused on a HTML form element
-			let focusedElement = event.srcElement;
+			const focusedElement = event.srcElement;
 			let focusedElement_tag = false;
 			let focusedElement_id = false;
 			if (focusedElement) {
@@ -3745,13 +3830,13 @@
 		}
 
 		// Only do this once (but trigger again if the overlay is gone)
-		let existingOverlay = document.getElementById('goodTube_hideMuteAdsOverlay');
+		const existingOverlay = document.getElementById('goodTube_hideMuteAdsOverlay');
 		if (goodTube_hideAndMuteAds_state === 'enabled' && existingOverlay) {
 			return;
 		}
 
 		// Get the Youtube video element
-		let videoElement = document.querySelector('#movie_player video');
+		const videoElement = document.querySelector('#movie_player video');
 
 		// If we found the video element
 		if (videoElement) {
@@ -3768,19 +3853,19 @@
 		}
 
 		// Hide the bottom area (buttons)
-		let bottomArea = document.querySelector('.ytp-chrome-bottom');
+		const bottomArea = document.querySelector('.ytp-chrome-bottom');
 		if (bottomArea) {
 			goodTube_helper_hideElement(bottomArea);
 		}
 
 		// Disable click actions
-		let playerArea = document.getElementById('movie_player');
+		const playerArea = document.getElementById('movie_player');
 		if (playerArea) {
 			playerArea.style.pointerEvents = 'none';
 		}
 
 		// Hide draggable captions
-		let draggableCaptions = document.querySelector('.ytp-caption-window-container');
+		const draggableCaptions = document.querySelector('.ytp-caption-window-container');
 		if (playerArea) {
 			goodTube_helper_hideElement(draggableCaptions);
 		}
@@ -3788,7 +3873,7 @@
 		// Remove there's no existing overlays
 		if (!existingOverlay) {
 			// Create a new overlay
-			let overlayElement = document.createElement('div');
+			const overlayElement = document.createElement('div');
 			overlayElement.setAttribute('data-version', 'old');
 			overlayElement.setAttribute('id', 'goodTube_hideMuteAdsOverlay');
 
@@ -3804,7 +3889,7 @@
 			`);
 
 			// Add it to the page
-			let injectElement = document.querySelector('.ytp-ad-player-overlay-layout');
+			const injectElement = document.querySelector('.ytp-ad-player-overlay-layout');
 			if (injectElement) {
 				injectElement.prepend(overlayElement);
 			}
@@ -3830,7 +3915,7 @@
 		}
 
 		// Get the Youtube video element
-		let videoElement = document.querySelector('#movie_player video');
+		const videoElement = document.querySelector('#movie_player video');
 
 		// If we found the video element
 		if (videoElement) {
@@ -3858,25 +3943,25 @@
 		}
 
 		// Show the bottom area (buttons)
-		let bottomArea = document.querySelector('.ytp-chrome-bottom');
+		const bottomArea = document.querySelector('.ytp-chrome-bottom');
 		if (bottomArea) {
 			goodTube_helper_showElement(bottomArea);
 		}
 
 		// Enable click actions
-		let playerArea = document.getElementById('movie_player');
+		const playerArea = document.getElementById('movie_player');
 		if (playerArea) {
 			playerArea.style.pointerEvents = 'auto';
 		}
 
 		// Show draggable captions
-		let draggableCaptions = document.querySelector('.ytp-caption-window-container');
+		const draggableCaptions = document.querySelector('.ytp-caption-window-container');
 		if (playerArea) {
 			goodTube_helper_showElement(draggableCaptions);
 		}
 
 		// Remove any existing overlays
-		let existingOverlay = document.getElementById('goodTube_hideMuteAdsOverlay');
+		const existingOverlay = document.getElementById('goodTube_hideMuteAdsOverlay');
 		if (existingOverlay) {
 			existingOverlay.remove();
 		}
@@ -3897,7 +3982,7 @@
 		}
 
 		// Target the autoplay button
-		let autoplayButton = document.querySelector('#movie_player .ytp-autonav-toggle-button');
+		const autoplayButton = document.querySelector('#movie_player .ytp-autonav-toggle-button');
 
 		// If we found it
 		if (autoplayButton) {
@@ -3918,7 +4003,7 @@
 				goodTube_helper_setCookie('goodTube_autoplay', oppositeValue);
 
 				// Update the embedded player
-				goodTube_player.contentWindow.postMessage('old_goodTube_autoplay_' + oppositeValue, '*');
+				goodTube_postToPlayer('old_goodTube_autoplay_' + oppositeValue);
 			});
 		}
 		// Otherwise, keep trying until we find the autoplay button
@@ -3940,7 +4025,7 @@
 		}
 
 		// Target the autoplay button
-		let autoplayButton = document.querySelector('#movie_player .ytp-autonav-toggle-button');
+		const autoplayButton = document.querySelector('#movie_player .ytp-autonav-toggle-button');
 
 		// If we found it and it's visible (this means we can now interact with it)
 		if (autoplayButton && autoplayButton.checkVisibility()) {
@@ -3977,7 +4062,7 @@
 		// Make sure we have what we need from the API
 		if (goodTube_page_api && typeof goodTube_page_api.playVideo === 'function' && typeof goodTube_page_api.mute === 'function' && typeof goodTube_page_api.setVolume === 'function') {
 			// Get the video element
-			let videoElement = document.querySelector('#movie_player video');
+			const videoElement = document.querySelector('#movie_player video');
 
 			// Play the video
 			goodTube_page_api.playVideo();
@@ -3997,7 +4082,7 @@
 				}
 
 				// Save the starting video time
-				let startingVideoTime = videoElement.currentTime;
+				const startingVideoTime = videoElement.currentTime;
 
 				// Clear the timeout
 				clearTimeout(goodTube_hideAndMuteAdsFallback_play_timeout);
@@ -4021,6 +4106,8 @@
 	let goodTube_iframe_initiated = false;
 	let goodTube_iframe_init_timeout = setTimeout(() => {}, 0);
 	function goodTube_iframe_init(retrying = false) {
+
+	// (uses global goodTube_postToTop)
 		// Version conflict check
 		if (goodTube_versionConflict) {
 			return;
@@ -4113,11 +4200,18 @@
 		goodTube_iframe_playbackSpeed();
 
 		// Run the iframe actions every 100ms
+		// Run the iframe actions and observe DOM changes to avoid frequent polling
 		goodTube_iframe_actions();
-		setInterval(goodTube_iframe_actions, 100);
+		try {
+			const _goodTube_iframe_observer = new MutationObserver(() => { goodTube_iframe_actions(); });
+			_goodTube_iframe_observer.observe(document, { childList: true, subtree: true, attributes: true });
+		} catch (e) {
+			// If MutationObserver isn't available, fall back to a low-frequency interval
+			setInterval(goodTube_iframe_actions, 2000);
+		}
 
 		// Let the parent frame know it's loaded
-		window.top.postMessage('old_goodTube_playerIframe_loaded', '*');
+		goodTube_postToTop('old_goodTube_playerIframe_loaded');
 	}
 
 	// Actions
@@ -4154,7 +4248,7 @@
 		}
 
 		// Check for an error
-		let errorExists = document.querySelector('.ytp-error');
+		const errorExists = document.querySelector('.ytp-error');
 
 		// If we found an error
 		if (errorExists) {
@@ -4162,7 +4256,7 @@
 			if (!goodTube_fallback) {
 				// Enable the "hide and mute ads" fallback
 				goodTube_fallback = true;
-				window.top.postMessage('old_goodTube_fallback_enable', '*');
+				goodTube_postToTop('old_goodTube_fallback_enable');
 
 				// Support double speed shortcuts
 				goodTube_iframe_supportDoubleSpeed_init();
@@ -4177,7 +4271,7 @@
 			if (goodTube_fallback) {
 				// Disable the "hide and mute ads" fallback
 				goodTube_fallback = false;
-				window.top.postMessage('old_goodTube_fallback_disable', '*');
+				goodTube_postToTop('old_goodTube_fallback_disable');
 
 				// Support double speed shortcuts
 				goodTube_iframe_supportDoubleSpeed_init();
@@ -4212,7 +4306,7 @@
 
 			if (goodTube_iframe_api && typeof goodTube_iframe_api.getPlaybackRate === 'function') {
 				// Tell the top frame to save the playback speed
-				window.top.postMessage('old_goodTube_playbackSpeed_' + goodTube_iframe_api.getPlaybackRate(), '*');
+				goodTube_postToTop('old_goodTube_playbackSpeed_' + goodTube_iframe_api.getPlaybackRate());
 			}
 		}, 100);
 	}
@@ -4225,7 +4319,7 @@
 		}
 
 		// Get all the video links (info cards and suggested videos that display at the end)
-		let videoLinks = document.querySelectorAll('.ytp-videowall-still:not(.goodTube_fixed), .ytp-ce-covering-overlay:not(.goodTube_fixed)');
+		const videoLinks = document.querySelectorAll('.ytp-videowall-still:not(.goodTube_fixed), .ytp-ce-covering-overlay:not(.goodTube_fixed)');
 		videoLinks.forEach(link => {
 			// Remove any event listeners that Youtube adds
 			link.addEventListener('click', (event) => {
@@ -4303,7 +4397,7 @@
 			return;
 		}
 
-		let style = document.createElement('style');
+		const style = document.createElement('style');
 		style.setAttribute('data-version', 'old');
 
 		let cssOutput = `
@@ -4479,7 +4573,7 @@
 			return;
 		}
 
-		let prevButton = document.querySelector('.ytp-prev-button');
+		const prevButton = document.querySelector('.ytp-prev-button');
 		if (prevButton && !prevButton.classList.contains('goodTube_visible')) {
 			prevButton.classList.add('goodTube_visible');
 		}
@@ -4492,7 +4586,7 @@
 			return;
 		}
 
-		let prevButton = document.querySelector('.ytp-prev-button');
+		const prevButton = document.querySelector('.ytp-prev-button');
 		if (prevButton && prevButton.classList.contains('goodTube_visible')) {
 			prevButton.classList.remove('goodTube_visible');
 		}
@@ -4507,7 +4601,7 @@
 		}
 
 		// Target the play button
-		let playButton = document.querySelector('.ytp-play-button');
+		const playButton = document.querySelector('.ytp-play-button');
 
 		// Make sure it exists before continuing
 		if (!playButton) {
@@ -4522,7 +4616,7 @@
 
 
 		// Previous button
-		let prevButton = document.querySelector('.ytp-prev-button');
+		const prevButton = document.querySelector('.ytp-prev-button');
 		if (prevButton) {
 			// Add actions
 			prevButton.addEventListener('click', function () {
@@ -4532,13 +4626,13 @@
 				}
 
 				// Tell the top frame to go to the previous video
-				window.top.postMessage('old_goodTube_prevVideo', '*');
+				goodTube_postToTop('old_goodTube_prevVideo');
 			});
 		}
 
 
 		// Next button
-		let nextButton = document.querySelector('.ytp-next-button');
+		const nextButton = document.querySelector('.ytp-next-button');
 		if (nextButton) {
 			// Add actions
 			nextButton.addEventListener('click', function () {
@@ -4548,13 +4642,13 @@
 				}
 
 				// Tell the top frame to go to the next video
-				window.top.postMessage('old_goodTube_nextVideo', '*');
+				goodTube_postToTop('old_goodTube_nextVideo');
 			});
 		}
 
 
 		// Theater mode button
-		let theaterButton = document.querySelector('.ytp-size-button');
+		const theaterButton = document.querySelector('.ytp-size-button');
 		if (theaterButton) {
 			// Style button
 			theaterButton.setAttribute('data-tooltip-target-id', 'ytp-size-button');
@@ -4574,13 +4668,13 @@
 				}
 
 				// Tell the top window to toggle theater mode
-				window.top.postMessage('old_goodTube_theater', '*');
+				goodTube_postToTop('old_goodTube_theater');
 			});
 		}
 
 
 		// Add autoplay button (before subtitles button)
-		let subtitlesButton = document.querySelector('.ytp-subtitles-button');
+		const subtitlesButton = document.querySelector('.ytp-subtitles-button');
 		if (subtitlesButton) {
 			// Add button
 			goodTube_helper_insertAdjacentHTML(
@@ -4590,7 +4684,7 @@
 			);
 
 			// Add actions
-			let autoplayButton = document.querySelector('#goodTube_autoplayButton');
+			const autoplayButton = document.querySelector('#goodTube_autoplayButton');
 			if (autoplayButton) {
 				autoplayButton.addEventListener('click', function () {
 					// Version conflict check
@@ -4599,16 +4693,16 @@
 					}
 
 					// Toggle the style of the autoplay button
-					let innerButton = autoplayButton.querySelector('.ytp-autonav-toggle-button');
-					let innerButtonState = innerButton.getAttribute('aria-checked');
+					const innerButton = autoplayButton.querySelector('.ytp-autonav-toggle-button');
+					const innerButtonState = innerButton.getAttribute('aria-checked');
 
 					if (innerButtonState === 'true') {
 						innerButton.setAttribute('aria-checked', 'false');
-						window.top.postMessage('old_goodTube_autoplay_false', '*');
+						goodTube_postToTop('old_goodTube_autoplay_false');
 					}
 					else {
 						innerButton.setAttribute('aria-checked', 'true');
-						window.top.postMessage('old_goodTube_autoplay_true', '*');
+						goodTube_postToTop('old_goodTube_autoplay_true');
 					}
 				});
 			}
@@ -4624,7 +4718,7 @@
 		}
 
 		// Target the video element
-		let videoElement = document.querySelector('#movie_player video');
+		const videoElement = document.querySelector('#movie_player video');
 
 		// Make sure it exists before continuing
 		if (!videoElement) {
@@ -4649,7 +4743,7 @@
 			goodTube_iframe_syncMainPlayer(true);
 
 			// Tell the top frame the video ended
-			window.top.postMessage('old_goodTube_videoEnded', '*');
+			goodTube_postToTop('old_goodTube_videoEnded');
 		}
 	}
 
@@ -4674,17 +4768,17 @@
 			}
 
 			// Get the key pressed (in lowercase)
-			let keyPressed = event.key.toLowerCase();
+			const keyPressed = event.key.toLowerCase();
 
 			// Theater mode (t)
 			if (keyPressed === 't') {
 				// Tell the top window to toggle theater mode
-				window.top.postMessage('old_goodTube_theater', '*');
+				goodTube_postToTop('old_goodTube_theater');
 			}
 
 			// Picture in picture (i)
 			if (keyPressed === 'i') {
-				let pipButton = document.querySelector('.ytp-pip-button');
+				const pipButton = document.querySelector('.ytp-pip-button');
 				if (pipButton) {
 					goodTube_helper_click(pipButton);
 				}
@@ -4693,13 +4787,13 @@
 			// Prev video ("shift+p" or "media track previous")
 			else if ((keyPressed === 'p' && event.shiftKey) || keyPressed === 'mediatrackprevious') {
 				// Tell the top window to go to the previous video
-				window.top.postMessage('old_goodTube_prevVideo', '*');
+				goodTube_postToTop('old_goodTube_prevVideo');
 			}
 
 			// Next video ("shift+n" or "media track next")
 			else if ((keyPressed === 'n' && event.shiftKey) || keyPressed === 'mediatracknext') {
 				// Tell the top window to go to the next video
-				window.top.postMessage('old_goodTube_nextVideo', '*');
+				goodTube_postToTop('old_goodTube_nextVideo');
 			}
 		});
 	}
@@ -4720,7 +4814,7 @@
 		}
 
 		// Get the key pressed (in lowercase)
-		let keyPressed = event.key.toLowerCase();
+		const keyPressed = event.key.toLowerCase();
 
 		// 2x playback rate
 		if (keyPressed === ' ' || keyPressed === 'k') {
@@ -4788,7 +4882,7 @@
 		}
 
 		// Get the key pressed (in lowercase)
-		let keyPressed = event.key.toLowerCase();
+		const keyPressed = event.key.toLowerCase();
 
 		// 2x playback rate
 		if (keyPressed === ' ' || keyPressed === 'k') {
@@ -4822,7 +4916,7 @@
 		}
 
 		// Get the key pressed (in lowercase)
-		let keyPressed = event.key.toLowerCase();
+		const keyPressed = event.key.toLowerCase();
 
 		// 2x playback rate
 		if (keyPressed === ' ' || keyPressed === 'k') {
@@ -4857,7 +4951,7 @@
 				goodTube_iframe_supportDoubleSpeed_allowNextClick = false;
 
 				// Tell the top level window to cancel any pending play actions
-				window.top.postMessage('old_goodTube_cancelPlay', '*');
+				goodTube_postToTop('old_goodTube_cancelPlay');
 			}
 			// Otherwise, double playback rate did happen
 			else {
@@ -5004,7 +5098,7 @@
 			setTimeout(() => { goodTube_iframe_supportDoubleSpeed_videoElement.focus(); }, 0);
 
 			// Tell the top level window to cancel any pending play actions
-			window.top.postMessage('old_goodTube_cancelPlay', '*');
+			goodTube_postToTop('old_goodTube_cancelPlay');
 		}
 		// Otherwise, double playback rate did happen
 		else {
@@ -5185,7 +5279,7 @@
 			`);
 
 			// Add the element to the page
-			let targetElement = document.querySelector('.html5-video-player');
+			const targetElement = document.querySelector('.html5-video-player');
 			if (targetElement) {
 				targetElement.appendChild(goodTube_iframe_supportDoubleSpeed_doubleSpeedElement);
 			}
@@ -5323,9 +5417,9 @@
 
 		// Load video
 		if (event.data.indexOf('old_goodTube_load_') !== -1) {
-			let bits = event.data.replace('old_goodTube_load_', '').split('|||');
-			let videoId = bits[0];
-			let startSeconds = parseFloat(bits[1]);
+			const bits = event.data.replace('old_goodTube_load_', '').split('|||');
+			const videoId = bits[0];
+			const startSeconds = parseFloat(bits[1]);
 
 			// Then load the new video
 			goodTube_iframe_loadVideo(videoId, startSeconds);
@@ -5341,9 +5435,9 @@
 		// Skip to time
 		else if (event.data.indexOf('old_goodTube_skipTo_') !== -1) {
 			// Get the data
-			let data = event.data.replace('old_goodTube_skipTo_', '').split('|||');
-			let time = parseFloat(data[0]);
-			let targetVideoId = data[1];
+			const data = event.data.replace('old_goodTube_skipTo_', '').split('|||');
+			const time = parseFloat(data[0]);
+			const targetVideoId = data[1];
 
 			// If the target video id exists AND the current video id doesn't match the target video id (it hasn't loaded yet)
 			if (targetVideoId !== '' && videoData.video_id !== targetVideoId) {
@@ -5388,16 +5482,16 @@
 		// Keyboard shortcut
 		else if (event.data.indexOf('old_goodTube_shortcut_') !== -1) {
 			// Target the video element
-			let videoElement = document.querySelector('video');
+			const videoElement = document.querySelector('video');
 
 			// If the video element exists
 			if (videoElement) {
 				// Get the key event data
-				let keyData = event.data.replace('old_goodTube_shortcut_', '').split('_');
+				const keyData = event.data.replace('old_goodTube_shortcut_', '').split('_');
 
 				// Parse the data
-				let eventType = keyData[0];
-				let eventData = {
+				const eventType = keyData[0];
+				const eventData = {
 					bubbles: true,
 					key: keyData[1],
 					keyCode: keyData[2],
@@ -5451,7 +5545,7 @@
 		}
 
 		// Target the fullscreen button
-		let fullscreenButton = document.querySelector('.ytp-fullscreen-button');
+		const fullscreenButton = document.querySelector('.ytp-fullscreen-button');
 
 		// If we found it
 		if (fullscreenButton) {
@@ -5477,11 +5571,11 @@
 		}
 
 		// Target the autoplay button
-		let autoplayButton = document.querySelector('#goodTube_autoplayButton');
+		const autoplayButton = document.querySelector('#goodTube_autoplayButton');
 
 		// If we found it
 		if (autoplayButton) {
-			let innerButton = autoplayButton.querySelector('.ytp-autonav-toggle-button');
+			const innerButton = autoplayButton.querySelector('.ytp-autonav-toggle-button');
 
 			// If the button is in the wrong state
 			if (innerButton.getAttribute('aria-checked') !== enabled) {
@@ -5508,7 +5602,7 @@
 		}
 
 		// Target the video
-		let videoElement = document.querySelector('video');
+		const videoElement = document.querySelector('video');
 
 		// If the video exists, restore the time
 		if (videoElement) {
@@ -5535,7 +5629,7 @@
 		}
 
 		// Target the video
-		let videoElement = document.querySelector('video');
+		const videoElement = document.querySelector('video');
 
 		// If the video element exists, pause it
 		if (videoElement) {
@@ -5551,7 +5645,7 @@
 		}
 
 		// Tell the top level window to cancel any pending play actions
-		window.top.postMessage('old_goodTube_cancelPlay', '*');
+		goodTube_postToTop('old_goodTube_cancelPlay');
 	}
 
 	// Mute
@@ -5563,7 +5657,7 @@
 		}
 
 		// Target the video
-		let videoElement = document.querySelector('video');
+		const videoElement = document.querySelector('video');
 
 		// If the video exists, mute it
 		if (videoElement) {
@@ -5588,7 +5682,7 @@
 		}
 
 		// Target the video
-		let videoElement = document.querySelector('video');
+		const videoElement = document.querySelector('video');
 
 		// If the video exists, unmute it
 		if (videoElement) {
@@ -5634,7 +5728,7 @@
 		}
 
 		// Make sure the video has not ended (this solves an edge case)
-		let videoElement = document.querySelector('#movie_player video');
+		const videoElement = document.querySelector('#movie_player video');
 		if (videoElement) {
 			if (videoElement.currentTime >= videoElement.duration) {
 				return;
@@ -5655,7 +5749,7 @@
 			return;
 		}
 
-		let fullScreenButton = document.querySelector('.ytp-fullscreen-button');
+		const fullScreenButton = document.querySelector('.ytp-fullscreen-button');
 		if (fullScreenButton) {
 			fullScreenButton.setAttribute('aria-disabled', 'false');
 
@@ -5690,7 +5784,7 @@
 		}
 
 		// Target the video element
-		let videoElement = document.querySelector('video');
+		const videoElement = document.querySelector('video');
 
 		// If we found the video element
 		if (videoElement) {
@@ -5703,7 +5797,7 @@
 			}
 
 			// Tell the top level window to sync the video
-			window.top.postMessage('old_goodTube_syncMainPlayer_' + syncTime + '|||' + videoData.video_id, '*');
+			goodTube_postToTop('old_goodTube_syncMainPlayer_' + syncTime + '|||' + videoData.video_id);
 		}
 	}
 
@@ -5724,7 +5818,7 @@
 			goodTube_pip = false;
 
 			// Set the picture in picture state in the top window
-			window.top.postMessage('old_goodTube_pip_false', '*');
+			goodTube_postToTop('old_goodTube_pip_false');
 		});
 
 		// If we enter the picture in picture
@@ -5737,7 +5831,7 @@
 			goodTube_pip = true;
 
 			// Set the picture in picture state in the top window
-			window.top.postMessage('old_goodTube_pip_true', '*');
+			goodTube_postToTop('old_goodTube_pip_true');
 		});
 	}
 
@@ -5752,13 +5846,13 @@
 			// Next video
 			navigator.mediaSession.setActionHandler("nexttrack", () => {
 				// Tell the top frame to go to the next video
-				window.top.postMessage('old_goodTube_nextVideo', '*');
+				goodTube_postToTop('old_goodTube_nextVideo');
 			});
 
 			// Previous video
 			navigator.mediaSession.setActionHandler("previoustrack", () => {
 				// Tell the top frame to go to the previous video
-				window.top.postMessage('old_goodTube_prevVideo', '*');
+				goodTube_postToTop('old_goodTube_prevVideo');
 			});
 		}
 	}
@@ -5771,13 +5865,13 @@
 		}
 
 		// Target the video element
-		let videoElement = document.querySelector('video');
+		const videoElement = document.querySelector('video');
 
 		// If we found the video element
 		if (videoElement) {
 			// Get the the intrinsic width and height of the video
-			let videoWidth = videoElement.videoWidth;
-			let videoHeight = videoElement.videoHeight;
+			const videoWidth = videoElement.videoWidth;
+			const videoHeight = videoElement.videoHeight;
 
 			// Calculate the aspect radio
 			function gcd(a, b) {
@@ -5789,12 +5883,12 @@
 				return [w / d, h / d];
 			}
 
-			let aspectRatio = calculateAspectRatio(videoWidth, videoHeight);
+			const aspectRatio = calculateAspectRatio(videoWidth, videoHeight);
 
 			// Make sure we found a valid aspect ratio
 			if (aspectRatio.length === 2 && !isNaN(aspectRatio[0]) && !isNaN(aspectRatio[1])) {
 				// Tell the top level window to sync the aspect ratio
-				window.top.postMessage('old_goodTube_syncAspectRatio_' + aspectRatio[0] + '_' + aspectRatio[1], '*');
+				goodTube_postToTop('old_goodTube_syncAspectRatio_' + aspectRatio[0] + '_' + aspectRatio[1]);
 			}
 		}
 	}
@@ -5870,7 +5964,7 @@
 		goodTube_proxyIframe_addYoutubeIframe();
 
 		// Let the parent frame know it's loaded
-		window.top.postMessage('old_goodTube_proxyIframe_loaded', '*');
+		goodTube_postToTop('old_goodTube_proxyIframe_loaded');
 	}
 
 	// Style the proxy iframe
@@ -5881,7 +5975,7 @@
 		}
 
 		// Hide the DOM elements from the proxy page
-		let style = document.createElement('style');
+		const style = document.createElement('style');
 		style.setAttribute('data-version', 'old');
 		style.textContent = `
 			/* Hide the page */
@@ -5916,7 +6010,7 @@
 			return;
 		}
 
-		let youtubeIframe = document.createElement('iframe');
+		const youtubeIframe = document.createElement('iframe');
 		youtubeIframe.setAttribute('data-version', 'old');
 		youtubeIframe.setAttribute('width', '100%');
 		youtubeIframe.setAttribute('height', '100%');
@@ -5953,7 +6047,7 @@
 		}
 
 		// Target the youtube iframe
-		let youtubeIframe = document.getElementById('goodTube_youtube_iframe_old');
+		const youtubeIframe = document.getElementById('goodTube_youtube_iframe_old');
 
 		// Make sure we found the youtube iframe
 		if (youtubeIframe) {
@@ -5973,7 +6067,13 @@
 			}
 			// Pass all other messages down to the youtube iframe
 			else {
-				youtubeIframe.contentWindow.postMessage(event.data, '*');
+				try {
+					let ytOrigin = 'https://www.youtube.com';
+					try { if (youtubeIframe.src) ytOrigin = new URL(youtubeIframe.src, location.href).origin; } catch (e) { ytOrigin = 'https://www.youtube.com'; }
+					youtubeIframe.contentWindow.postMessage(event.data, ytOrigin);
+				} catch (e) {
+					// swallow errors
+				}
 			}
 		}
 		// Otherwise, try again
