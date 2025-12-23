@@ -1024,12 +1024,11 @@
 		// Append the proxy iframe to the DOM first
 		playerWrapper.appendChild(proxyIframe);
 
-		// Use setTimeout to navigate to YouTube embed error page
+		// Use setTimeout to navigate to Wikipedia Bruce Lee page
 		// This triggers Tampermonkey to inject the script into the iframe
-		// Using YouTube's embed domain ensures X-Frame-Options allows framing
 		setTimeout(() => {
 			try {
-				proxyIframe.src = 'https://www.youtube.com/embed/error?goodTubeProxy=1';
+				proxyIframe.src = 'https://en.wikipedia.org/wiki/Bruce_Lee?goodTubeProxy=1';
 			} catch (e) {
 				// Swallow navigation errors
 			}
