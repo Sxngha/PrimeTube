@@ -5799,6 +5799,8 @@
 			goodTube_proxyIframe_receiveMessage_timeout = setTimeout(() => { goodTube_proxyIframe_receiveMessage(event); }, 100);
 		}
 
+		return;
+
 		// Target the youtube iframe
 		const youtubeIframe = document.getElementById('goodTube_youtube_iframe_old');
 
@@ -5838,6 +5840,7 @@
 			goodTube_proxyIframe_receiveMessage_timeout = setTimeout(() => { goodTube_proxyIframe_receiveMessage(event); }, 100);
 		}
 	}
+	return;
 
 
 	/* Start GoodTube
