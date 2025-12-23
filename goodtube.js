@@ -311,6 +311,10 @@
 	// Have we already turned off Youtube's default autoplay?
 	let goodTube_turnedOffAutoplay = false;
 
+	// Prevent overlapping runs of the main actions handler (protect against re-entrancy)
+	let goodTube_actions_running = false;
+	let goodTube_actions_last = 0;
+
 	// Have we already redirected away from a short?
 	let goodTube_redirectHappened = false;
 
@@ -2390,6 +2394,18 @@
 			return;
 		}
 
+		// Avoid re-entrant runs: if already running and last run was recent, skip
+		try {
+			const now = Date.now();
+			if (goodTube_actions_running && (now - goodTube_actions_last) < 300) {
+				return;
+			}
+			goodTube_actions_running = true;
+			goodTube_actions_last = now;
+		} catch (e) {
+			// defensive - continue
+		}
+
 		// Get the previous and current URL
 
 		// Remove hashes, these mess with things sometimes
@@ -2473,6 +2489,9 @@
 		if (goodTube_hideMembersOnlyVideos === 'true') {
 			goodTube_youtube_hideMembersOnlyVideos();
 		}
+
+		// clear running flag
+		try { goodTube_actions_running = false; } catch (e) { /* swallow */ }
 	}
 
 	// Init menu
@@ -5778,6 +5797,9 @@
 	}
 
 	// Receive a message from the parent window
+	// Debounce duplicate messages to prevent tight message loops
+	let goodTube_proxy_last_msg = null;
+	let goodTube_proxy_last_ts = 0;
 	let goodTube_proxyIframe_receiveMessage_timeout = setTimeout(() => {}, 0);
 	function goodTube_proxyIframe_receiveMessage(event) {
 		// Version conflict check
@@ -5788,6 +5810,18 @@
 		// Make sure some data exists
 		if (typeof event.data !== 'string') {
 			return;
+		}
+
+		// Debounce: ignore repeated identical messages delivered too quickly
+		try {
+			const now = Date.now();
+			if (event.data === goodTube_proxy_last_msg && (now - goodTube_proxy_last_ts) < 200) {
+				return;
+			}
+			goodTube_proxy_last_msg = event.data;
+			goodTube_proxy_last_ts = now;
+		} catch (e) {
+			// swallow
 		}
 
 		// Make sure the DOM is ready, if not retry (this ensures that the message will fire eventually)
