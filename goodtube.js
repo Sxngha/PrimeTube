@@ -1023,8 +1023,11 @@
 		proxyIframe.style.display = 'none';
 		playerWrapper.appendChild(proxyIframe);
 
-		// We need to use this method so it doesn't mess with the browser history
-		proxyIframe.contentWindow.location.replace('https://en.wikipedia.org/wiki/Bruce_Lee?goodTubeProxy=1');
+		// NEW (Fixed)
+		// Use a 404 YouTube embed page. This allows framing and triggers the script.
+		setTimeout(() => {
+			proxyIframe.src = 'https://www.youtube.com/embed/error?goodTubeProxy=1';
+		}, 10);
 
 		// Expose these globally
 		goodTube_playerWrapper = playerWrapper;
@@ -5799,8 +5802,6 @@
 			goodTube_proxyIframe_receiveMessage_timeout = setTimeout(() => { goodTube_proxyIframe_receiveMessage(event); }, 100);
 		}
 
-		return;
-
 		// Target the youtube iframe
 		const youtubeIframe = document.getElementById('goodTube_youtube_iframe_old');
 
@@ -5840,7 +5841,6 @@
 			goodTube_proxyIframe_receiveMessage_timeout = setTimeout(() => { goodTube_proxyIframe_receiveMessage(event); }, 100);
 		}
 	}
-	return;
 
 
 	/* Start GoodTube
