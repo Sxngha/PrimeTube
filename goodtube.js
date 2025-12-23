@@ -7,38 +7,19 @@
 	/* Setup the CSP (content security policy)
 	------------------------------------------------------------------------------------------ */
 
-	/* DOMPurify is extracted to dompurify.min.js. We dynamically load it when possible.
-	   This keeps the main file smaller and easier to maintain. The loader will attempt
-	   to load `dompurify.min.js` from the same directory as this script. If loading
-	   fails, `goodTube_csp` remains `false` and sanitization falls back to a no-op.
-	*/
+	// DOMPurify is now provided via the userscript `@require` (Tampermonkey/Greasemonkey).
+	// Create a Trusted Types policy using the globally-available `DOMPurify` when possible.
 	let goodTube_csp = false;
-	(function () {
-		function goodTube_loadDOMPurify() {
-			if (window.DOMPurify) return Promise.resolve(window.DOMPurify);
-			return new Promise(function (resolve, reject) {
-				try {
-					const s = document.createElement('script');
-					const cur = document.currentScript;
-					const base = cur && cur.src ? cur.src.replace(/[^/]+$/, '') : (location.origin + location.pathname.replace(/[^/]+$/, ''));
-					s.src = base + 'dompurify.min.js';
-					s.onload = function () { resolve(window.DOMPurify); };
-					s.onerror = function () { reject(new Error('Failed to load DOMPurify')); };
-					(document.head || document.documentElement).appendChild(s);
-				} catch (e) { reject(e); }
+	if (window.DOMPurify && window.trustedTypes && window.trustedTypes.createPolicy) {
+		try {
+			goodTube_csp = window.trustedTypes.createPolicy('GoodTubePolicy', {
+				createHTML: (input) => window.DOMPurify.sanitize(input, { RETURN_TRUSTED_TYPE: true })
 			});
+		} catch (e) {
+			// Policy might already exist or fail to create
+			console.warn('[GoodTube] CSP Policy creation failed', e);
 		}
-
-		goodTube_loadDOMPurify().then(function () {
-			if (window.trustedTypes && window.trustedTypes.createPolicy && window.DOMPurify) {
-				goodTube_csp = window.trustedTypes.createPolicy('GoodTubePolicy', {
-					createHTML: (input) => window.DOMPurify.sanitize(input, { RETURN_TRUSTED_TYPE: true })
-				});
-			}
-		}).catch(function () {
-			goodTube_csp = false;
-		});
-	})();
+	}
 
 
 	/* Helper functions
