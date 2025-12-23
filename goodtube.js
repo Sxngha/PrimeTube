@@ -2739,30 +2739,32 @@
 				position: fixed;
 				bottom: 26px;
 				right: 21px;
-				background: #FF9500; /* swapped: orange button */
-				border-radius: 12px;
-				box-shadow: 0 6px 18px rgba(15, 23, 40, .25);
-				width: 56px;
-				height: 56px;
-				z-index: 9999;
-				transition: transform .12s ease, box-shadow .12s ease, opacity .12s linear;
+				background: #1a1a1a;
+				border-radius: 9999px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+				width: 48px;
+				height: 48px;
+				z-index: 999;
+				transition: background .2s linear, opacity .2s linear, box-shadow .2s linear;
 				opacity: 1;
 				cursor: pointer;
 			}
 
 			.goodTube_menuButton .goodTube_notice {
-				background: #1a1a1a; /* swapped */
+				background: #FF9500;
 				color: #ffffff;
-				font-size: 12px;
-				font-weight: 600;
-				padding: 6px 10px;
-				border-radius: 6px;
+				font-size: 11px;
+				font-weight: 500;
+				padding-left: 8px;
+				padding-right: 8px;
+				padding-top: 4px;
+				padding-bottom: 4px;
+				border-radius: 4px;
 				position: absolute;
-				bottom: -18px;
-				left: -12px;
+				bottom: -14px;
+				left: -10px;
 				text-align: center;
-				z-index: 10000;
-				box-shadow: 0 6px 18px rgba(15, 23, 40, .12);
+				z-index: 1;
 			}
 
 			.goodTube_menuButton img {
@@ -2772,50 +2774,51 @@
 				transform: translate(-50%, -50%);
 				pointer-events: none;
 				width: 26px;
-				filter: invert(1) sepia(1) saturate(100%) hue-rotate(180deg); /* make icon dark on orange */
 			}
 
 			.goodTube_menuButton::before {
 				content: 'Settings';
-				background: #ffffff;
-				border-radius: 6px;
-				color: #0b1220;
-				font-size: 11px;
+				background: rgba(0, 0, 0, .9);
+				border-radius: 4px;
+				color: #ffffff;
+				font-size: 10px;
 				font-weight: 700;
 				text-transform: uppercase;
-				padding: 6px 10px;
+				padding-top: 4px;
+				padding-bottom: 4px;
+				padding-left: 8px;
+				padding-right: 8px;
 				position: absolute;
 				left: 50%;
-				top: -30px;
+				top: -26px;
 				transform: translateX(-50%);
 				letter-spacing: 0.04em;
 				opacity: 0;
-				transition: opacity .12s ease-in-out, top .12s ease-in-out;
+				transition: opacity .2s ease-in-out, top .2s ease-in-out;
 				pointer-events: none;
 				text-decoration: none;
-				box-shadow: 0 6px 18px rgba(2,6,23,.12);
 			}
 
 			.goodTube_menuButton::after {
 				content: '';
 				position: absolute;
-				top: -12px;
+				top: -6px;
 				left: 50%;
 				transform: translateX(-50%);
 				width: 0;
 				height: 0;
-				border-left: 6px solid transparent;
-				border-right: 6px solid transparent;
-				border-top: 6px solid #ffffff;
+				border-left: 5px solid transparent;
+				border-right: 5px solid transparent;
+				border-top: 5px solid rgba(0, 0, 0, .9);
 				opacity: 0;
-				transition: opacity .12s ease-in-out, top .12s ease-in-out;
+				transition: opacity .2s ease-in-out, top .2s ease-in-out;
 				pointer-events: none;
 				text-decoration: none;
 			}
 
 			.goodTube_menuButton:hover {
-				transform: translateY(-4px);
-				box-shadow: 0 12px 30px rgba(15, 23, 40, .18);
+				background: #2a2a2a;
+				box-shadow: 0 0 12px rgba(0, 0, 0, .5);
 			}
 
 			.goodTube_menuButton:hover::before,
@@ -2836,17 +2839,17 @@
 				position: fixed;
 				bottom: 60px;
 				right: 16px;
-				width: 36px;
-				height: 36px;
-				background: #FF9500;
-				color: #0b1220;
-				font-size: 14px;
+				width: 14px;
+				height: 14px;
+				background: #ffffff;
+				color: #000000;
+				font-size: 9px;
 				font-weight: 700;
-				border-radius: 10px;
+				border-radius: 999px;
 				text-align: center;
-				line-height: 36px;
-				z-index: 10001;
-				box-shadow: 0 6px 18px rgba(15, 23, 40, .12);
+				line-height: 13px;
+				z-index: 9999;
+				box-shadow: 0 0 4px rgba(0, 0, 0, .5);
 				opacity: 1;
 				text-decoration: none;
 				cursor: pointer;
@@ -2916,25 +2919,24 @@
 
 			.goodTube_modal .goodTube_modal_inner .goodTube_modal_closeButton {
 				position: absolute;
-				top: 16px;
+				top: 17px;
 				right: 12px;
-				color: #0b1220;
-				font-size: 18px;
-				font-weight: 700;
+				color: #333;
+				font-size: 20px;
+				font-weight: 400;
 				text-decoration: none;
 				width: 40px;
 				height: 40px;
 				background: #ffffff;
-				border-radius: 10px;
+				border-radius: 9999px;
 				text-align: center;
 				line-height: 40px;
-				transition: transform .12s ease, background .12s linear;
+				transition: background .2s linear;
 				cursor: pointer;
 			}
 
 			.goodTube_modal .goodTube_modal_inner .goodTube_modal_closeButton:hover {
-				transform: translateY(-2px);
-				background: #f3f4f6;
+				background: #dddddd;
 			}
 
 
@@ -3022,23 +3024,24 @@
 				padding: 0;
 				box-sizing: border-box;
 				display: inline-block;
-				background: #ffffff; /* modern inverted button */
-				color: #0b1220;
+				background: #FF9500;
+				color: #ffffff;
 				text-align: center;
 				font-size: 15px;
 				font-weight: 700;
-				padding: 10px 16px;
-				letter-spacing: 0.01em;
-				border-radius: 8px;
-				font-family: Inter, Roboto, Arial, sans-serif;
+				padding-top: 12px;
+				padding-bottom: 12px;
+				padding-left: 18px;
+				padding-right: 18px;
+				letter-spacing: 0.024em;
+				border-radius: 4px;
+				font-family: Roboto, Arial, sans-serif;
 				cursor: pointer;
-				transition: transform .12s ease, box-shadow .12s ease, background .12s linear;
-				box-shadow: 0 8px 20px rgba(2,6,23,.08);
+				transition: background .2s linear;
 			}
 
 			.goodTube_modal .goodTube_button:hover {
-				transform: translateY(-2px);
-				box-shadow: 0 14px 36px rgba(2,6,23,.12);
+				background: #FFB84D;
 			}
 
 			.goodTube_modal .goodTube_heart {
