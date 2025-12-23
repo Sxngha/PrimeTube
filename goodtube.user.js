@@ -12,63 +12,77 @@
 // @match        *://youtube.com/*
 // @match        *://*.wikipedia.org/*
 // @run-at       document-start
-// @grant        none
+// @grant        GM_xmlhttpRequest
+// @connect      raw.githubusercontent.com
+// @connect      cdn.jsdelivr.net
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    // Configure CSP
-    let goodTube_csp = false;
-    if (window.trustedTypes && window.trustedTypes.createPolicy) {
-        try {
-            goodTube_csp = window.trustedTypes.createPolicy("GoodTubeLoadPolicy", {
-                createScript: string => string
-            });
-        } catch (e) {
-            console.log('GoodTube: TrustedTypes policy already exists');
-        }
+    console.log('[GoodTube] UserScript loading...');
+
+    // Try to load the script using GM_xmlhttpRequest
+    function loadGoodTubeScript() {
+        console.log('[GoodTube] Attempting to fetch script from GitHub...');
+
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: 'https://raw.githubusercontent.com/Sxngha/PrimeTube/main/goodtube.js',
+            onload: function(response) {
+                if (response.status === 200) {
+                    console.log('[GoodTube] Script fetched successfully, executing...');
+                    try {
+                        // Execute the script
+                        const script = document.createElement('script');
+                        script.textContent = response.responseText;
+                        script.setAttribute('data-version', 'old');
+                        (document.head || document.documentElement).appendChild(script);
+                        console.log('[GoodTube] Script executed successfully!');
+                    } catch (e) {
+                        console.error('[GoodTube] Error executing script:', e);
+                    }
+                } else {
+                    console.error('[GoodTube] Failed to fetch script, status:', response.status);
+                    loadFromCDN();
+                }
+            },
+            onerror: function(error) {
+                console.error('[GoodTube] Network error:', error);
+                loadFromCDN();
+            }
+        });
     }
 
-    // Load GoodTube from external source
-    function loadGoodTube() {
-        const script = document.createElement('script');
-        script.src = 'https://raw.githubusercontent.com/Sxngha/PrimeTube/main/goodtube.js';
-        script.async = false;
-        script.type = 'text/javascript';
-        
-        script.onerror = function() {
-            console.error('GoodTube: Failed to load external script from GitHub');
-            // Try loading from jsDelivr CDN as backup
-            loadGoodTubeBackup();
-        };
-        
-        script.onload = function() {
-            console.log('GoodTube: Script loaded successfully');
-        };
-        
-        (document.head || document.documentElement).appendChild(script);
+    // Backup: Load from CDN
+    function loadFromCDN() {
+        console.log('[GoodTube] Trying CDN backup...');
+
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: 'https://cdn.jsdelivr.net/gh/Sxngha/PrimeTube@main/goodtube.js',
+            onload: function(response) {
+                if (response.status === 200) {
+                    console.log('[GoodTube] CDN script fetched, executing...');
+                    const script = document.createElement('script');
+                    script.textContent = response.responseText;
+                    script.setAttribute('data-version', 'old');
+                    (document.head || document.documentElement).appendChild(script);
+                } else {
+                    console.error('[GoodTube] CDN also failed');
+                }
+            },
+            onerror: function(error) {
+                console.error('[GoodTube] CDN error:', error);
+            }
+        });
     }
 
-    // Backup CDN loader
-    function loadGoodTubeBackup() {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/gh/Sxngha/PrimeTube@main/goodtube.js';
-        script.async = false;
-        script.type = 'text/javascript';
-        
-        script.onerror = function() {
-            console.error('GoodTube: Failed to load from backup CDN');
-        };
-        
-        (document.head || document.documentElement).appendChild(script);
-    }
-
-    // Wait for DOM to be ready
+    // Start loading when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadGoodTube);
+        document.addEventListener('DOMContentLoaded', loadGoodTubeScript);
     } else {
-        loadGoodTube();
+        loadGoodTubeScript();
     }
 
 })();
