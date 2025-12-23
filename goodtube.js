@@ -476,6 +476,152 @@
     }
 
     // ==================================================================================
+    // FEATURE IMPLEMENTATIONS
+    // ==================================================================================
+    
+    // Auto Quality Feature
+    function applyAutoQuality() {
+        const quality = getCookie('primeTube_autoQuality') || 'best';
+        
+        const checkAndSetQuality = () => {
+            const player = document.querySelector('video');
+            if (!player) {
+                setTimeout(checkAndSetQuality, 500);
+                return;
+            }
+
+            // Wait for quality menu to be available
+            setTimeout(() => {
+                const settingsButton = document.querySelector('.ytp-settings-button');
+                if (!settingsButton) return;
+
+                // Click settings
+                settingsButton.click();
+                
+                setTimeout(() => {
+                    // Find quality option
+                    const qualityMenu = Array.from(document.querySelectorAll('.ytp-menuitem')).find(item => 
+                        item.textContent.includes('Quality')
+                    );
+                    
+                    if (qualityMenu) {
+                        qualityMenu.click();
+                        
+                        setTimeout(() => {
+                            if (quality === 'best') {
+                                // Select highest quality
+                                const qualities = document.querySelectorAll('.ytp-quality-menu .ytp-menuitem');
+                                if (qualities.length > 1) {
+                                    qualities[1].click(); // First option after "Auto"
+                                }
+                            } else {
+                                // Select specific quality
+                                const targetQuality = Array.from(document.querySelectorAll('.ytp-quality-menu .ytp-menuitem')).find(item =>
+                                    item.textContent.includes(quality + 'p')
+                                );
+                                if (targetQuality) targetQuality.click();
+                            }
+                            
+                            // Close menu
+                            settingsButton.click();
+                        }, 200);
+                    }
+                }, 200);
+            }, 1000);
+        };
+        
+        checkAndSetQuality();
+    }
+
+    // Default Speed Feature
+    function applyDefaultSpeed() {
+        const speed = parseFloat(getCookie('primeTube_defaultSpeed') || '1');
+        
+        const checkAndSetSpeed = () => {
+            const player = document.querySelector('video');
+            if (!player) {
+                setTimeout(checkAndSetSpeed, 500);
+                return;
+            }
+
+            player.playbackRate = speed;
+            console.log(`%c⚡ Speed set to ${speed}x`, 'color: #FF8C00;');
+        };
+        
+        checkAndSetSpeed();
+    }
+
+    // Remember Volume Feature
+    function applyVolumeMemory() {
+        const rememberVolume = getCookie('primeTube_rememberVolume') === 'true';
+        if (!rememberVolume) return;
+        
+        const savedVolume = parseInt(getCookie('primeTube_savedVolume') || '100');
+        
+        const checkAndSetVolume = () => {
+            const player = document.querySelector('video');
+            if (!player) {
+                setTimeout(checkAndSetVolume, 500);
+                return;
+            }
+
+            player.volume = savedVolume / 100;
+            console.log(`%c🔊 Volume set to ${savedVolume}%`, 'color: #FF8C00;');
+            
+            // Save volume changes
+            player.addEventListener('volumechange', () => {
+                setCookie('primeTube_savedVolume', Math.round(player.volume * 100));
+            });
+        };
+        
+        checkAndSetVolume();
+    }
+
+    // Theater Mode by Default
+    function applyTheaterMode() {
+        const theaterByDefault = getCookie('primeTube_theaterByDefault') === 'true';
+        if (!theaterByDefault) return;
+        
+        const checkAndSetTheater = () => {
+            const theaterButton = document.querySelector('.ytp-size-button');
+            if (!theaterButton) {
+                setTimeout(checkAndSetTheater, 500);
+                return;
+            }
+
+            // Check if already in theater mode
+            const isTheater = document.querySelector('ytd-watch-flexy[theater]');
+            if (!isTheater) {
+                theaterButton.click();
+                console.log('%c🎬 Theater mode enabled', 'color: #FF8C00;');
+            }
+        };
+        
+        setTimeout(checkAndSetTheater, 1500);
+    }
+
+    // Apply all features on video load
+    function applyAllFeatures() {
+        applyAutoQuality();
+        applyDefaultSpeed();
+        applyVolumeMemory();
+        applyTheaterMode();
+    }
+
+    // Watch for URL changes (YouTube is a SPA)
+    let lastUrl = location.href;
+    new MutationObserver(() => {
+        const currentUrl = location.href;
+        if (currentUrl !== lastUrl) {
+            lastUrl = currentUrl;
+            if (currentUrl.includes('/watch')) {
+                console.log('%c🎬 New video detected, applying features...', 'color: #FFD700;');
+                setTimeout(applyAllFeatures, 1000);
+            }
+        }
+    }).observe(document, { subtree: true, childList: true });
+
+    // ==================================================================================
     // INITIALIZE
     // ==================================================================================
     
@@ -484,9 +630,17 @@
             injectModernStyles();
             
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', buildModernUI);
+                document.addEventListener('DOMContentLoaded', () => {
+                    buildModernUI();
+                    if (location.href.includes('/watch')) {
+                        applyAllFeatures();
+                    }
+                });
             } else {
                 buildModernUI();
+                if (location.href.includes('/watch')) {
+                    applyAllFeatures();
+                }
             }
 
             console.log('%c✨ PrimeTube Ready!', 'color: #FFD700; font-size: 14px; font-weight: bold;');
