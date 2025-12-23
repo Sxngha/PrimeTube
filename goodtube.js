@@ -2430,31 +2430,26 @@
 			return;
 		}
 
-		// Remove old menu buttons and previous roots if present
+		// Remove old menu buttons if present
 		try {
 			document.querySelectorAll('.goodTube_menuButton, .goodTube_menuClose').forEach(el => el.remove());
-			const oldRoot = document.getElementById('primeTube_ui_root');
-			if (oldRoot) oldRoot.remove();
-			const oldAlt = document.getElementById('primetube-ui-root');
-			if (oldAlt) oldAlt.remove();
-			const oldStyle = document.querySelector('style[data-version="primeTube"]');
-			if (oldStyle) oldStyle.remove();
 		} catch (e) {}
 
-		// Add UI styles (compatible with user's primetube selectors)
+		// Add Fire UI styles
 		const fireCss = `
-			/* PrimeTube / primetube-ui-root styles */
-			#primetube-ui-root{position:fixed;bottom:18px;right:18px;z-index:999999;pointer-events:none}
-			.pt-fire-btn,.pt-gear-btn{pointer-events:auto;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer}
-			.pt-fire-btn{width:64px;height:64px;background:#0b0b0b;border:2px solid #ff8c00;color:#ff8c00;margin-left:8px;box-shadow:0 6px 18px rgba(255,140,0,0.16);transition:transform .18s ease}
-			.pt-fire-btn:hover{transform:translateY(-4px)}
-			.pt-gear-btn{width:38px;height:38px;background:#0f0f0f;border:1px solid #333;color:#bbb;margin-right:8px}
-			.pt-fire-btn svg{width:28px;height:28px;fill:currentColor}
-			.pt-gear-btn svg{width:18px;height:18px;fill:currentColor}
+			/* PrimeTube Fire UI */
+			:root{--glow-color:#ff4500;--fire-orange:#ff8c00;--deep-black:#0a0a0a}
+			.primeTube_fireStyle{ }
+			.primeTube_fireButton{position:fixed;bottom:26px;right:21px;width:60px;height:60px;background:var(--deep-black);border-radius:50%;z-index:999999;cursor:pointer;display:flex;align-items:center;justify-content:center;border:2px solid var(--fire-orange);box-shadow:0 0 15px var(--glow-color),inset 0 0 10px var(--glow-color);transition:all .3s ease}
+			.primeTube_fireButton:hover{transform:scale(1.1);box-shadow:0 0 25px var(--fire-orange),inset 0 0 15px var(--fire-orange)}
+			.primeTube_smallBtn{position:fixed;bottom:35px;right:95px;width:35px;height:35px;background:var(--deep-black);border-radius:50%;z-index:999999;cursor:pointer;display:flex;align-items:center;justify-content:center;border:1px solid #444;transition:all .2s ease}
+			.primeTube_smallBtn:hover{border-color:var(--fire-orange);background:#151515}
+			.primeTube_fireButton svg{width:32px;height:32px;fill:var(--fire-orange);filter:drop-shadow(0 0 5px var(--fire-orange))}
+			.primeTube_smallBtn svg{width:18px;height:18px;fill:#888}
 
 			/* Make the settings modal backdrop softer and blurred */
 			.goodTube_modal .goodTube_modal_overlay{background:rgba(3,6,10,0.6);backdrop-filter:blur(6px)}
-			.goodTube_modal .goodTube_modal_inner{background:linear-gradient(180deg,#0b0f14cc,#0b0f14);} 
+			.goodTube_modal .goodTube_modal_inner{background:linear-gradient(180deg,#0b0f14cc,#0b0f14);}
 		`;
 
 		const s = document.createElement('style');
@@ -2462,40 +2457,37 @@
 		s.textContent = fireCss;
 		document.head.appendChild(s);
 
-		// Build UI container using user's expected id/class names
+		// Build UI container
 		const uiContainer = document.createElement('div');
-		uiContainer.id = 'primetube-ui-root';
+		uiContainer.id = 'primeTube_ui_root';
 		uiContainer.innerHTML = `
-			<div style="display:flex;align-items:center;pointer-events:auto">
-				<div class="pt-gear-btn" title="Settings">
-					<svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zm8.94 3a7.95 7.95 0 01-.07.92l2.03 1.58a.5.5 0 01.12.64l-1.92 3.32a.5.5 0 01-.6.22l-2.39-.96a7.9 7.9 0 01-1.6.93l-.36 2.54a.5.5 0 01-.5.42h-3.84a.5.5 0 01-.5-.42l-.36-2.54a7.9 7.9 0 01-1.6-.93l-2.39.96a.5.5 0 01-.6-.22L2 13.14a.5.5 0 01.12-.64l2.03-1.58c-.05-.31-.07-.62-.07-.92s.02-.61.07-.92L2.12 6.5a.5.5 0 01-.12-.64L3.92 2.54a.5.5 0 01.6-.22l2.39.96c.5-.36 1.05-.65 1.6-.93L8.6 0a.5.5 0 01.5-.42h3.84a.5.5 0 01.5.42l.36 2.54c.55.28 1.1.57 1.6.93l2.39-.96a.5.5 0 01.6.22l1.92 3.32a.5.5 0 01-.12.64l-2.03 1.58c.05.31.07.62.07.92z"/></svg>
-				</div>
+			<div class="primeTube_smallBtn" title="Quick Settings">
+				<svg viewBox="0 0 24 24"><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.35 19.43,11.03L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11.03C4.53,11.35 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" /></svg>
+			</div>
 
-				<div class="pt-fire-btn" title="PrimeTube Menu">
-					<svg viewBox="0 0 24 24"><path d="M12,2C12,2 12,7 12,11C12,14.31 9.31,17 6,17C7.3,19.41 9.87,21 12.75,21C16.75,21 20,17.75 20,13.75C20,8.33 12,2 12,2M12,19.25C10.75,19.25 9.61,18.84 8.68,18.15C9.5,17.44 10,16.41 10,15.25C10,13.25 8.5,11.5 6.67,11.05C7.58,9.08 9.53,7.66 11.77,7.18C11.1,8.36 10.75,9.74 10.75,11.25C10.75,15.11 13.89,18.25 17.75,18.25C16.32,18.89 14.71,19.25 13,19.25"/></svg>
-				</div>
+			<div class="primeTube_fireButton" title="PrimeTube Menu">
+				<svg viewBox="0 0 24 24"><path d="M12,2C12,2 12,7 12,11C12,14.31 9.31,17 6,17C7.3,19.41 9.87,21 12.75,21C16.75,21 20,17.75 20,13.75C20,8.33 12,2 12,2M12,19.25C10.75,19.25 9.61,18.84 8.68,18.15C9.5,17.44 10,16.41 10,15.25C10,13.25 8.5,11.5 6.67,11.05C7.58,9.08 9.53,7.66 11.77,7.18C11.1,8.36 10.75,9.74 10.75,11.25C10.75,15.11 13.89,18.25 17.75,18.25C16.32,18.89 14.71,19.25 13,19.25"/></svg>
 			</div>
 		`;
 
 		document.body.appendChild(uiContainer);
 
-		// Wire up events using user's selectors
-		const fireBtn = document.querySelector('.pt-fire-btn');
-		const gearBtn = document.querySelector('.pt-gear-btn');
+		// Wire up events
+		const fireBtn = document.querySelector('.primeTube_fireButton');
+		const smallBtn = document.querySelector('.primeTube_smallBtn');
 		const modal = document.querySelector('.goodTube_modal');
 
 		if (fireBtn) {
-			fireBtn.addEventListener('click', (e) => {
+			fireBtn.addEventListener('click', () => {
 				if (goodTube_versionConflict) return;
-				e.stopPropagation();
 				if (modal) modal.classList.toggle('visible');
 			});
 		}
 
-		if (gearBtn) {
-			gearBtn.addEventListener('click', (e) => {
+		if (smallBtn) {
+			smallBtn.addEventListener('click', () => {
 				if (goodTube_versionConflict) return;
-				e.stopPropagation();
+				// Toggle to first settings block for quick access
 				if (modal) {
 					modal.classList.add('visible');
 					const firstSetting = modal.querySelector('.goodTube_option_shorts') || modal.querySelector('.goodTube_content');
