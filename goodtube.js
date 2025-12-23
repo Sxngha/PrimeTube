@@ -433,7 +433,8 @@
 		}
 	}
 
-	setInterval(goodTube_checkVersionConflict, 0);
+	// Avoid a 0ms interval (causes CPU spike). Poll once per second instead.
+	setInterval(goodTube_checkVersionConflict, 1000);
 
 
 
@@ -751,8 +752,8 @@
 			// Clear timeout first to solve memory leak issues
 			clearTimeout(goodTube_youtube_pauseMuteVideos_timeout);
 
-			// Loop this function
-			goodTube_youtube_pauseMuteVideos_timeout = setTimeout(goodTube_youtube_pauseMuteVideos, 100);
+			// Loop this function (slower polling to reduce CPU)
+			goodTube_youtube_pauseMuteVideos_timeout = setTimeout(goodTube_youtube_pauseMuteVideos, 250);
 
 			// Don't pause or mute videos
 			return;
@@ -807,8 +808,8 @@
 		// Clear timeout first to solve memory leak issues
 		clearTimeout(goodTube_youtube_pauseMuteVideos_timeout);
 
-		// Loop this function
-		goodTube_youtube_pauseMuteVideos_timeout = setTimeout(goodTube_youtube_pauseMuteVideos, 100);
+			// Loop this function (slower polling to reduce CPU)
+		goodTube_youtube_pauseMuteVideos_timeout = setTimeout(goodTube_youtube_pauseMuteVideos, 250);
 	}
 
 	// Turn off autoplay
@@ -1006,9 +1007,9 @@
 		goodTube_playerWrapper = playerWrapper;
 		goodTube_player = proxyIframe;
 
-		// Run the actions every 100ms
+		// Run the actions on a reasonable interval to avoid high CPU and jank
 		goodTube_actions();
-		setInterval(goodTube_actions, 100);
+		setInterval(goodTube_actions, 500);
 	}
 
 	// Position and size the player
@@ -2738,32 +2739,30 @@
 				position: fixed;
 				bottom: 26px;
 				right: 21px;
-				background: #1a1a1a;
-				border-radius: 9999px;
-				box-shadow: 0 0 10px rgba(0, 0, 0, .5);
-				width: 48px;
-				height: 48px;
-				z-index: 999;
-				transition: background .2s linear, opacity .2s linear, box-shadow .2s linear;
+				background: #FF9500; /* swapped: orange button */
+				border-radius: 12px;
+				box-shadow: 0 6px 18px rgba(15, 23, 40, .25);
+				width: 56px;
+				height: 56px;
+				z-index: 9999;
+				transition: transform .12s ease, box-shadow .12s ease, opacity .12s linear;
 				opacity: 1;
 				cursor: pointer;
 			}
 
 			.goodTube_menuButton .goodTube_notice {
-				background: #FF9500;
+				background: #1a1a1a; /* swapped */
 				color: #ffffff;
-				font-size: 11px;
-				font-weight: 500;
-				padding-left: 8px;
-				padding-right: 8px;
-				padding-top: 4px;
-				padding-bottom: 4px;
-				border-radius: 4px;
+				font-size: 12px;
+				font-weight: 600;
+				padding: 6px 10px;
+				border-radius: 6px;
 				position: absolute;
-				bottom: -14px;
-				left: -10px;
+				bottom: -18px;
+				left: -12px;
 				text-align: center;
-				z-index: 1;
+				z-index: 10000;
+				box-shadow: 0 6px 18px rgba(15, 23, 40, .12);
 			}
 
 			.goodTube_menuButton img {
@@ -2773,51 +2772,50 @@
 				transform: translate(-50%, -50%);
 				pointer-events: none;
 				width: 26px;
+				filter: invert(1) sepia(1) saturate(100%) hue-rotate(180deg); /* make icon dark on orange */
 			}
 
 			.goodTube_menuButton::before {
 				content: 'Settings';
-				background: rgba(0, 0, 0, .9);
-				border-radius: 4px;
-				color: #ffffff;
-				font-size: 10px;
+				background: #ffffff;
+				border-radius: 6px;
+				color: #0b1220;
+				font-size: 11px;
 				font-weight: 700;
 				text-transform: uppercase;
-				padding-top: 4px;
-				padding-bottom: 4px;
-				padding-left: 8px;
-				padding-right: 8px;
+				padding: 6px 10px;
 				position: absolute;
 				left: 50%;
-				top: -26px;
+				top: -30px;
 				transform: translateX(-50%);
 				letter-spacing: 0.04em;
 				opacity: 0;
-				transition: opacity .2s ease-in-out, top .2s ease-in-out;
+				transition: opacity .12s ease-in-out, top .12s ease-in-out;
 				pointer-events: none;
 				text-decoration: none;
+				box-shadow: 0 6px 18px rgba(2,6,23,.12);
 			}
 
 			.goodTube_menuButton::after {
 				content: '';
 				position: absolute;
-				top: -6px;
+				top: -12px;
 				left: 50%;
 				transform: translateX(-50%);
 				width: 0;
 				height: 0;
-				border-left: 5px solid transparent;
-				border-right: 5px solid transparent;
-				border-top: 5px solid rgba(0, 0, 0, .9);
+				border-left: 6px solid transparent;
+				border-right: 6px solid transparent;
+				border-top: 6px solid #ffffff;
 				opacity: 0;
-				transition: opacity .2s ease-in-out, top .2s ease-in-out;
+				transition: opacity .12s ease-in-out, top .12s ease-in-out;
 				pointer-events: none;
 				text-decoration: none;
 			}
 
 			.goodTube_menuButton:hover {
-				background: #2a2a2a;
-				box-shadow: 0 0 12px rgba(0, 0, 0, .5);
+				transform: translateY(-4px);
+				box-shadow: 0 12px 30px rgba(15, 23, 40, .18);
 			}
 
 			.goodTube_menuButton:hover::before,
@@ -2838,17 +2836,17 @@
 				position: fixed;
 				bottom: 60px;
 				right: 16px;
-				width: 14px;
-				height: 14px;
-				background: #ffffff;
-				color: #000000;
-				font-size: 9px;
+				width: 36px;
+				height: 36px;
+				background: #FF9500;
+				color: #0b1220;
+				font-size: 14px;
 				font-weight: 700;
-				border-radius: 999px;
+				border-radius: 10px;
 				text-align: center;
-				line-height: 13px;
-				z-index: 9999;
-				box-shadow: 0 0 4px rgba(0, 0, 0, .5);
+				line-height: 36px;
+				z-index: 10001;
+				box-shadow: 0 6px 18px rgba(15, 23, 40, .12);
 				opacity: 1;
 				text-decoration: none;
 				cursor: pointer;
@@ -2906,35 +2904,37 @@
 				width: 780px;
 				max-width: calc(100% - 32px);
 				max-height: calc(100% - 32px);
-				z-index: 2;
-				background: #ffffff;
-				border-radius: 12px;
-				box-shadow: 0 0 24px rgba(0, 0, 0, .5);
-				font-family: Roboto, Arial, sans-serif;
-				padding: 24px;
+				z-index: 10002;
+				background: #0b1220; /* modern dark modal */
+				border-radius: 14px;
+				box-shadow: 0 20px 50px rgba(2,6,23,.45);
+				font-family: Inter, Roboto, Arial, sans-serif;
+				padding: 28px;
 				overflow: auto;
+				color: #e6eef8;
 			}
 
 			.goodTube_modal .goodTube_modal_inner .goodTube_modal_closeButton {
 				position: absolute;
-				top: 17px;
+				top: 16px;
 				right: 12px;
-				color: #333;
-				font-size: 20px;
-				font-weight: 400;
+				color: #0b1220;
+				font-size: 18px;
+				font-weight: 700;
 				text-decoration: none;
 				width: 40px;
 				height: 40px;
 				background: #ffffff;
-				border-radius: 9999px;
+				border-radius: 10px;
 				text-align: center;
 				line-height: 40px;
-				transition: background .2s linear;
+				transition: transform .12s ease, background .12s linear;
 				cursor: pointer;
 			}
 
 			.goodTube_modal .goodTube_modal_inner .goodTube_modal_closeButton:hover {
-				background: #dddddd;
+				transform: translateY(-2px);
+				background: #f3f4f6;
 			}
 
 
@@ -2949,10 +2949,10 @@
 
 			.goodTube_modal .goodTube_content {
 				margin-bottom: 48px;
+			}
 
-				&:last-child {
-					margin-bottom: 0;
-				}
+			.goodTube_modal .goodTube_content:last-child {
+				margin-bottom: 0;
 			}
 
 			.goodTube_modal .goodTube_content .goodTube_setting {
@@ -2967,37 +2967,32 @@
 				height: 24px;
 				min-width: 24px;
 				min-height: 24px;
-				border-radius: 4px;
-				border: 1px solid #333;
+				border-radius: 6px;
+				border: 1px solid rgba(255,255,255,.08);
+				background: rgba(255,255,255,.03);
+				color: #e6eef8;
 				overflow: hidden;
 				cursor: pointer;
 			}
 
 			.goodTube_modal .goodTube_content .goodTube_setting select {
-				border-radius: 4px;
-				border: 1px solid #999;
-				width: 100%;
-				font-size: 14px;
-				color: #000000;
-				padding-top: 8px;
-				padding-bottom: 8px;
-				padding-left: 8px;
-				padding-right: 16px;
-				font-family: Roboto, Arial, sans-serif;
-				transition: border .2s linear;
+				border-radius: 8px;
+				border: 1px solid rgba(255,255,255,.08);
 				width: 96px;
+				font-size: 14px;
+				color: #e6eef8;
+				padding: 8px 12px;
+				font-family: Inter, Roboto, Arial, sans-serif;
+				transition: border .12s linear, background .12s linear;
+				background: rgba(255,255,255,.02);
 				min-width: 96px;
-				font-weight: 400;
-			}
-
-			.goodTube_modal .goodTube_content .goodTube_setting select {
-				border: 1px solid #333;
+				font-weight: 500;
 			}
 
 			.goodTube_modal .goodTube_content .goodTube_setting label {
 				font-size: 15px;
-				color: #000000;
-				font-weight: 500;
+				color: #dbe9ff;
+				font-weight: 600;
 				cursor: pointer;
 			}
 
@@ -3011,14 +3006,14 @@
 				margin-top: 8px;
 				width: 100%;
 				margin-left: 16px;
+			}
 
-				li {
-					margin-bottom: 8px;
+			.goodTube_modal .goodTube_list li {
+				margin-bottom: 8px;
+			}
 
-					&:last-child {
-						margin-bottom: 0;
-					}
-				}
+			.goodTube_modal .goodTube_list li:last-child {
+				margin-bottom: 0;
 			}
 
 			.goodTube_modal .goodTube_button {
@@ -3027,24 +3022,23 @@
 				padding: 0;
 				box-sizing: border-box;
 				display: inline-block;
-				background: #FF9500;
-				color: #ffffff;
+				background: #ffffff; /* modern inverted button */
+				color: #0b1220;
 				text-align: center;
 				font-size: 15px;
 				font-weight: 700;
-				padding-top: 12px;
-				padding-bottom: 12px;
-				padding-left: 18px;
-				padding-right: 18px;
-				letter-spacing: 0.024em;
-				border-radius: 4px;
-				font-family: Roboto, Arial, sans-serif;
+				padding: 10px 16px;
+				letter-spacing: 0.01em;
+				border-radius: 8px;
+				font-family: Inter, Roboto, Arial, sans-serif;
 				cursor: pointer;
-				transition: background .2s linear;
+				transition: transform .12s ease, box-shadow .12s ease, background .12s linear;
+				box-shadow: 0 8px 20px rgba(2,6,23,.08);
 			}
 
 			.goodTube_modal .goodTube_button:hover {
-				background: #FFB84D;
+				transform: translateY(-2px);
+				box-shadow: 0 14px 36px rgba(2,6,23,.12);
 			}
 
 			.goodTube_modal .goodTube_heart {
@@ -3080,27 +3074,27 @@
 
 			.goodTube_modal .goodTube_report input:not(.goodTube_button),
 			.goodTube_modal .goodTube_report textarea {
-				border-radius: 4px;
-				border: 1px solid #999;
+				border-radius: 8px;
+				border: 1px solid rgba(255,255,255,.06);
 				width: 100%;
 				font-size: 14px;
-				color: #000000;
-				padding-top: 12px;
-				padding-bottom: 12px;
-				padding-left: 16px;
-				padding-right: 16px;
-				font-family: Roboto, Arial, sans-serif;
-				transition: border .2s linear;
+				color: #e6eef8;
+				padding: 12px 16px;
+				font-family: Inter, Roboto, Arial, sans-serif;
+				transition: border .12s linear, background .12s linear;
+				background: rgba(255,255,255,.02);
 			}
 
 			.goodTube_modal .goodTube_report input:not(.goodTube_button)::placeholder,
 			.goodTube_modal .goodTube_report textarea::placeholder {
-				color: #666666;
+				color: rgba(230,238,248,.5);
 			}
 
 			.goodTube_modal .goodTube_report input:not(.goodTube_button):focus,
 			.goodTube_modal .goodTube_report textarea:focus {
-				border: 1px solid #333;
+				border: 1px solid rgba(255,255,255,.14);
+				outline: none;
+				background: rgba(255,255,255,.03);
 			}
 
 			.goodTube_modal .goodTube_report input:not(.goodTube_button) {
@@ -3120,48 +3114,49 @@
 				width: 100%;
 				padding-right: 8px;
 				border-bottom: 1px solid #eeeeee;
+			}
 
-				&:first-child {
-					border-top: 1px solid #eeeeee;
-				}
+			.goodTube_modal_faq:first-child {
+				border-top: 1px solid #eeeeee;
+			}
 
-				/* Question */
-				.goodTube_modal_question {
-					display: flex;
-					flex-wrap: nowrap;
-					gap: 16px;
-					width: 100%;
-					padding-top: 16px;
-					padding-bottom: 16px;
-					transition: color .2s linear;
-					cursor: pointer;
+			/* Question */
+			.goodTube_modal_faq .goodTube_modal_question {
+				display: flex;
+				flex-wrap: nowrap;
+				gap: 16px;
+				width: 100%;
+				padding-top: 16px;
+				padding-bottom: 16px;
+				transition: color .2s linear;
+				cursor: pointer;
+			}
 
-					.goodTube_modal_question_text {
-						width: 100%;
-						font-weight: 700;
-					}
+			.goodTube_modal_faq .goodTube_modal_question .goodTube_modal_question_text {
+				width: 100%;
+				font-weight: 700;
+			}
 
-					.goodTube_modal_question_arrow {
-						position: relative;
-						top: 4px;
-						transform: rotate(45deg);
-						box-sizing: border-box;
-						width: 8px;
-						height: 8px;
-						border-color: #808080;
-						border-style: solid;
-						border-width: 0px 2px 2px 0px;
-						transition: transform .2s ease, top .2s ease, border-color .2s linear;
-					}
+			.goodTube_modal_faq .goodTube_modal_question .goodTube_modal_question_arrow {
+				position: relative;
+				top: 4px;
+				transform: rotate(45deg);
+				box-sizing: border-box;
+				width: 8px;
+				height: 8px;
+				border-color: #808080;
+				border-style: solid;
+				border-width: 0px 2px 2px 0px;
+				transition: transform .2s ease, top .2s ease, border-color .2s linear;
+			}
 
-					&:hover {
-						color: #e84a82;
+			.goodTube_modal_faq .goodTube_modal_question:hover {
+				color: #e84a82;
+			}
 
-						.goodTube_modal_question_arrow {
-							border-color: #e84a82;
-						}
-					}
-				}
+			.goodTube_modal_faq .goodTube_modal_question:hover .goodTube_modal_question_arrow {
+				border-color: #e84a82;
+			}
 
 				/* Answer */
 				.goodTube_modal_answer {
