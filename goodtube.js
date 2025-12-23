@@ -1021,13 +1021,10 @@
 		proxyIframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
 		proxyIframe.setAttribute('allowfullscreen', true);
 		proxyIframe.style.display = 'none';
-		playerWrapper.appendChild(proxyIframe);
-
 		// NEW (Fixed)
 		// Use a 404 YouTube embed page. This allows framing and triggers the script.
-		setTimeout(() => {
-			proxyIframe.src = 'https://www.youtube.com/embed/error?goodTubeProxy=1';
-		}, 10);
+		proxyIframe.src = 'https://www.youtube.com/embed/error?goodTubeProxy=1';
+		playerWrapper.appendChild(proxyIframe);
 
 		// Expose these globally
 		goodTube_playerWrapper = playerWrapper;
