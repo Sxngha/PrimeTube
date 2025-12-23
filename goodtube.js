@@ -2510,9 +2510,6 @@
 		// Add the menu container to the page
 		document.body.appendChild(menuContainer);
 
-		// Inject PrimeTube Fire UI (replaces default menu buttons)
-		try { primeTube_buildUI(); } catch (e) { /* ignore */ }
-
 		// Configure the settings to show their actual values
 		let shortsEnabled = ' checked';
 		if (goodTube_shorts === 'true') {
