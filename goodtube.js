@@ -26,7 +26,7 @@
 	------------------------------------------------------------------------------------------ */
 	// Setup GET parameters
 	function goodTube_helper_setupGetParams() {
-		const getParams = {};
+		let getParams = {};
 
 		document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
 			function decode(s) {
@@ -44,13 +44,14 @@
 			if (window.location.href.indexOf('/watch/') !== -1) {
 				splitString = '/watch/';
 			}
-
-			if (window.location.href.indexOf('/live/') !== -1) {
+			else {
 				splitString = '/live/';
 			}
 
-			if (splitString !== '') {
-				getParams['v'] = window.location.href.split(splitString)[1];
+			let bits = window.location.href.split(splitString);
+			if (bits.length === 2) {
+				let endBits = bits[1].split('?');
+				getParams['v'] = endBits[endBits.length - 1];
 			}
 		}
 
@@ -58,7 +59,7 @@
 	}
 
 	// Set a cookie
-	function goodTube_helper_setCookie(name, value, days = 365) {
+	function goodTube_helper_setCookie(name, value, days = 399) {
 		document.cookie = name + "=" + encodeURIComponent(value) + ";SameSite=Lax;path=/;max-age=" + (days * 24 * 60 * 60);
 	}
 
@@ -1024,15 +1025,9 @@
 		// Append the proxy iframe to the DOM first
 		playerWrapper.appendChild(proxyIframe);
 
-		// Use setTimeout to navigate to Wikipedia Bruce Lee page
-		// This triggers Tampermonkey to inject the script into the iframe
-		setTimeout(() => {
-			try {
-				proxyIframe.src = 'https://en.wikipedia.org/wiki/Bruce_Lee?goodTubeProxy=1';
-			} catch (e) {
-				// Swallow navigation errors
-			}
-		}, 0);
+		// We need to use this method so it doesn't mess with the browser history
+		// This properly triggers Tampermonkey script injection into the iframe
+		proxyIframe.contentWindow.location.replace('https://en.wikipedia.org/wiki/Bruce_Lee?goodTubeProxy=1');
 
 		// Expose these globally
 		goodTube_playerWrapper = playerWrapper;
